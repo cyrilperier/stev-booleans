@@ -1,6 +1,7 @@
 package stev.booleans.examples;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import stev.booleans.And;
 import stev.booleans.BooleanFormula;
@@ -50,6 +51,10 @@ public class CnfExample
 		System.out.println(Arrays.toString(clauses[0]));
 		// Second element corresponds to second clause: [1, -3, 1, 2]
 		System.out.println(Arrays.toString(clauses[1]));
+		
+		// What is the integer associated to variable q?
+		Map<String,Integer> associations = cnf.getVariablesMap();
+		System.out.println("Variable q is associated to number " + associations.get("q"));
 	}
 
 }
