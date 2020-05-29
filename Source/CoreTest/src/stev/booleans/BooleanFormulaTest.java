@@ -209,4 +209,47 @@ public class BooleanFormulaTest
 		assertEquals(-1, i_cl2[2]);
 		assertEquals(2, i_cl2[3]);
 	}
+	
+	@Test
+	public void testGetClausesAtomic1()
+	{
+		And a = new And(X, new Not(Y));
+		int[][] clauses = a.getClauses();
+		int[] i_cl1 = clauses[0];
+		int[] i_cl2 = clauses[1];
+		assertEquals(1, i_cl1.length);
+		assertEquals(1, i_cl2.length);
+		assertEquals(1, i_cl1[0]);
+		assertEquals(-2, i_cl2[0]);
+	}
+	
+	@Test
+	public void testGetClausesAtomic2()
+	{
+		Or a = new Or(X, new Not(Y));
+		int[][] clauses = a.getClauses();
+		int[] i_cl1 = clauses[0];
+		assertEquals(2, i_cl1.length);
+		assertEquals(1, i_cl1[0]);
+		assertEquals(-2, i_cl1[1]);
+	}
+	
+	@Test
+	public void testGetClausesAtomic3()
+	{
+		Not a = new Not(X);
+		int[][] clauses = a.getClauses();
+		int[] i_cl1 = clauses[0];
+		assertEquals(1, i_cl1.length);
+		assertEquals(-1, i_cl1[0]);
+	}
+	
+	@Test
+	public void testGetClausesAtomic4()
+	{
+		int[][] clauses = X.getClauses();
+		int[] i_cl1 = clauses[0];
+		assertEquals(1, i_cl1.length);
+		assertEquals(1, i_cl1[0]);
+	}
 }

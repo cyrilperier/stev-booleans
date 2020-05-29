@@ -48,6 +48,26 @@ public class PropositionalVariable extends BooleanFormula
 	}
 	
 	@Override
+	public int[][] getClauses()
+	{
+		Map<String,Integer> var_dict = getVariablesMap();
+		int[] clause = toClause(var_dict);
+		int[][] clauses = new int[1][];
+		clauses[0] = clause;
+		return clauses;
+	}
+	
+	/**
+	 * Gets the DIMACS clause associated to this formula
+	 * @return The DIMACS clause in the form of an array of integers
+	 */
+	protected int[] toClause(Map<String,Integer> var_dict)
+	{
+		int index = var_dict.get(m_variableName);
+		return new int[] {index};
+	}
+	
+	@Override
 	protected PropositionalVariable pushNegations()
 	{
 		return this;
@@ -85,11 +105,5 @@ public class PropositionalVariable extends BooleanFormula
 			int index = map.size() + 1;
 			map.put(m_variableName, index);
 		}
-	}
-
-	@Override
-	public int[][] getClauses() 
-	{
-		throw new BooleanFormulaException("Formula is not in CNF");
 	}
 }

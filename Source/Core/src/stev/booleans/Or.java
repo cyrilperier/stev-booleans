@@ -32,7 +32,11 @@ public class Or extends NaryConnective
 	@Override
 	public int[][] getClauses()
 	{
-		throw new BooleanFormulaException("Formula is not in CNF");
+		Map<String,Integer> var_dict = getVariablesMap();
+		int[] clause = toClause(var_dict);
+		int[][] clauses = new int[1][];
+		clauses[0] = clause;
+		return clauses;
 	}
 	
 	/**

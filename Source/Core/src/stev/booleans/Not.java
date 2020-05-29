@@ -29,7 +29,26 @@ public class Not extends BooleanFormula
 	@Override
 	public int[][] getClauses()
 	{
-		throw new BooleanFormulaException("Formula is not in CNF");
+		Map<String,Integer> var_dict = getVariablesMap();
+		int[] clause = toClause(var_dict);
+		int[][] clauses = new int[1][];
+		clauses[0] = clause;
+		return clauses;
+	}
+	
+	/**
+	 * Gets the DIMACS clause associated to this formula
+	 * @return The DIMACS clause in the form of an array of integers
+	 */
+	protected int[] toClause(Map<String,Integer> var_dict)
+	{
+		if (!(m_operand instanceof PropositionalVariable))
+		{
+			throw new BooleanFormulaException("Formula is not in CNF");
+		}
+		PropositionalVariable p = (PropositionalVariable) m_operand;
+		int index = var_dict.get(p.m_variableName);
+		return new int[] {-index};
 	}
 	
 	@Override
