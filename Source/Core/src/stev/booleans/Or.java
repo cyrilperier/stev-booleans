@@ -1,9 +1,30 @@
+/*
+    Simple manipulation of Boolean formulas
+    Copyright (C) 2020 Sylvain Hallé
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package stev.booleans;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Representation of the logical disjunction connective.
+ * @author Sylvain Hallé
+ */
 public class Or extends NaryConnective
 {
 	public Or(/*@ non_null @*/ List<BooleanFormula> operands)
@@ -160,64 +181,5 @@ public class Or extends NaryConnective
 			new_list.add(f.keepAndOrNot());
 		}
 		return new Or(new_list);
-	}
-	
-	@Override
-	protected BooleanFormula distributeAndOr()
-	{
-		int num_terms = m_operands.size();
-		List<BooleanFormula> new_list = new ArrayList<BooleanFormula>(num_terms);
-		int[] sizes = new int[num_terms];
-		int[] cursor = new int[num_terms];
-		for (int i = 0; i < num_terms; i++)
-		{
-			cursor[i] = 0;
-			BooleanFormula bf = m_operands.get(i).keepAndOrNot();
-			new_list.add(bf);
-			sizes[i] = 1;
-			if (bf instanceof And)
-			{
-				sizes[i] = ((And) bf).m_operands.size();
-			}
-		}
-		boolean run = true;
-		And big_and = new And();
-		while (run)
-		{
-			Or clause = new Or();
-			for (int i = 0; i < num_terms; i++)
-			{
-				BooleanFormula bf = new_list.get(i);
-				if (bf instanceof And)
-				{
-					clause.addOperand(((And) bf).m_operands.get(cursor[i]));
-				}
-				else
-				{
-					clause.addOperand(bf);
-				}
-			}
-			big_and.addOperand(clause);
-			int reset = 0;
-			for (int i = 0; i < num_terms; i++)
-			{
-				cursor[i]++;
-				if (cursor[i] == sizes[i])
-				{
-					cursor[i] = 0;
-					reset++;
-				}
-				else
-				{
-					break;
-				}
-			}
-			if (reset == num_terms)
-			{
-				// We enumerated them all
-				run = false;
-			}
-		}
-		return big_and.flatten();
 	}
 }

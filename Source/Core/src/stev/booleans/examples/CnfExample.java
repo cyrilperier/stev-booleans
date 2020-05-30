@@ -1,3 +1,20 @@
+/*
+    Simple manipulation of Boolean formulas
+    Copyright (C) 2020 Sylvain Hallé
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package stev.booleans.examples;
 
 import java.util.Arrays;
@@ -10,6 +27,11 @@ import stev.booleans.Not;
 import stev.booleans.Or;
 import stev.booleans.PropositionalVariable;
 
+/**
+ * Example showing the manipulation of the various classes provided by 
+ * the package.
+ * @author Sylvain Hallé
+ */
 public class CnfExample
 {
 
@@ -18,10 +40,11 @@ public class CnfExample
 	 */
 	public static void main(String[] args) 
 	{
-		// We create the formula p | (!q & (r -> p)) | q
+		// We create the formula p | (!q & (r -> p)) | (q & s)
 		PropositionalVariable p = new PropositionalVariable("p");
 		PropositionalVariable q = new PropositionalVariable("q");
 		PropositionalVariable r = new PropositionalVariable("r");
+		PropositionalVariable s = new PropositionalVariable("s");
 		
 		// Subformula: r -> p
 		Implies imp = new Implies(r, p);
@@ -30,16 +53,19 @@ public class CnfExample
 		Not not = new Not(q);
 		
 		// Subformula !q & (r -> p)
-		And and = new And(not, imp);
+		And and_1 = new And(not, imp);
+		
+		// Subformula q & s
+		And and_2 = new And(q, s);
 		
 		// The whole formula
-		Or big_formula = new Or(p, and, q);
+		Or big_formula = new Or(p, and_1, and_2);
 		
 		// We can print it
 		System.out.println(big_formula);
 		
 		// Convert this formula to CNF
-		BooleanFormula cnf = big_formula.toCnf();
+		BooleanFormula cnf = BooleanFormula.toCnf(big_formula);
 		
 		// Let's print it again
 		System.out.println(cnf);
@@ -49,7 +75,7 @@ public class CnfExample
 		
 		// What's in that array? First element corresponds to first clause: [1, -2, 3]
 		System.out.println(Arrays.toString(clauses[0]));
-		// Second element corresponds to second clause: [1, -3, 1, 2]
+		// Second element corresponds to second clause: [1, -3, 4]
 		System.out.println(Arrays.toString(clauses[1]));
 		
 		// What is the integer associated to variable q?

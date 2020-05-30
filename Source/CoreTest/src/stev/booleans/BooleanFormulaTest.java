@@ -98,50 +98,21 @@ public class BooleanFormulaTest
 	}
 	
 	@Test
-	public void testDistributeOrVarVar()
+	public void testAndOr1()
 	{
-		Or or = new Or(X, Y);
-		BooleanFormula bf = or.distributeAndOr();
-		assertEquals("(x | y)", bf.toString());
+		Implies op = new Implies(P, Q);
+		BooleanFormula bf = op.keepAndOrNot();
+		assertTrue(bf instanceof Or);
+		Or n_op = (Or) bf;
+		assertTrue(n_op.m_operands.get(0) instanceof Not);
+		assertEquals(Q, n_op.m_operands.get(1));
 	}
-	
-	@Test
-	public void testDistributeOrVarAnd()
-	{
-		Or or = new Or(X, new And(Y, Z));
-		BooleanFormula bf = or.distributeAndOr();
-		assertEquals("((x | y) & (x | z))", bf.toString());
-	}
-	
-	@Test
-	public void testDistributeOrAndAnd()
-	{
-		Or or = new Or(new And(X, Y), new And(Z, T));
-		BooleanFormula bf = or.distributeAndOr();
-		assertEquals("((x | z) & (y | z) & (x | t) & (y | t))", bf.toString());
-	}
-	
-	@Test
-	public void testDistributeOrAndVarAnd()
-	{
-		Or or = new Or(new And(X, Y), P, new And(Z, T));
-		BooleanFormula bf = or.distributeAndOr();
-		assertEquals("((x | p | z) & (y | p | z) & (x | p | t) & (y | p | t))", bf.toString());
-	}
-	
-	@Test
-	public void testDistributeOrAndVarNegAnd()
-	{
-		Or or = new Or(new And(X, Y), new Not(P), new And(Z, T));
-		BooleanFormula bf = or.distributeAndOr();
-		assertEquals("((x | !p | z) & (y | !p | z) & (x | !p | t) & (y | !p | t))", bf.toString());
-	}
-	
+		
 	@Test
 	public void testCnf1()
 	{
 		Or or = new Or(new And(X, Y), P, new And(Z, T));
-		BooleanFormula bf = or.toCnf();
+		BooleanFormula bf = BooleanFormula.toCnf(or);
 		assertTrue(bf.isCnf());
 		System.out.println(bf);
 	}
@@ -150,7 +121,7 @@ public class BooleanFormulaTest
 	public void testCnf2()
 	{
 		Or or = new Or(new And(X, Y), P, new And(Z, new Or(T, U)));
-		BooleanFormula bf = or.toCnf();
+		BooleanFormula bf = BooleanFormula.toCnf(or);
 		assertTrue(bf.isCnf());
 		System.out.println(bf);
 	}
@@ -159,7 +130,7 @@ public class BooleanFormulaTest
 	public void testCnf3()
 	{
 		Or or = new Or(new And(X, Y), P, new And(Z, T, U));
-		BooleanFormula bf = or.toCnf();
+		BooleanFormula bf = BooleanFormula.toCnf(or);
 		assertTrue(bf.isCnf());
 		System.out.println(bf);
 	}

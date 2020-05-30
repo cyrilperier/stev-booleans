@@ -1,9 +1,30 @@
+/*
+    Simple manipulation of Boolean formulas
+    Copyright (C) 2020 Sylvain Hallé
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package stev.booleans;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Representation of the logical negation connective.
+ * @author Sylvain Hallé
+ */
 public class Not extends BooleanFormula
 {
 	/*@ non_null @*/ protected BooleanFormula m_operand;
@@ -130,14 +151,6 @@ public class Not extends BooleanFormula
 	protected Not keepAndOrNot()
 	{
 		return new Not(m_operand.keepAndOrNot());
-	}
-	
-	@Override
-	protected Not distributeAndOr()
-	{
-		// We do nothing, as we assume the formula is already in NNF,
-		// so the only operand inside not is a variable
-		return this;
 	}
 	
 	@Override
