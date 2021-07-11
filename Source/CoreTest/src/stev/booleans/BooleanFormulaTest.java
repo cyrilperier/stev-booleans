@@ -136,6 +136,15 @@ public class BooleanFormulaTest
 	}
 	
 	@Test
+	public void testCnf4()
+	{
+		And and = new And(new Or(new And(X, Y), new And(Z, T)), new Or(new And(new Not(X), new Not(T)), new And(Y, Z)));
+		BooleanFormula bf = BooleanFormula.toCnf(and);
+		assertTrue(bf.isCnf());
+		System.out.println(bf);
+	}
+	
+	@Test
 	public void testVariablesMap()
 	{
 		Or or = new Or(new And(X, Y), new Not(P), new And(Z, T));

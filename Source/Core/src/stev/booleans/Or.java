@@ -27,6 +27,11 @@ import java.util.Map;
  */
 public class Or extends NaryConnective
 {
+	public static Or or(/*@ non_null @*/ BooleanFormula ... operands)
+	{
+		return new Or(operands);
+	}
+	
 	public Or(/*@ non_null @*/ List<BooleanFormula> operands)
 	{
 		super(operands);
