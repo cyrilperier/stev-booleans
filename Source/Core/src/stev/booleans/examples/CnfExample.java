@@ -41,11 +41,18 @@ public class CnfExample
 	public static void main(String[] args) 
 	{
 		// We create the formula p | (!q & (r -> p)) | (q & s)
-		PropositionalVariable p = new PropositionalVariable("p");
-		PropositionalVariable q = new PropositionalVariable("q");
-		PropositionalVariable r = new PropositionalVariable("r");
+		PropositionalVariable p = new PropositionalVariable("l");
+		PropositionalVariable q = new PropositionalVariable("c");
+		PropositionalVariable r = new PropositionalVariable("n");
 		PropositionalVariable s = new PropositionalVariable("s");
-		
+
+
+		PropositionalVariable l = new PropositionalVariable("l");
+		PropositionalVariable c = new PropositionalVariable("c");
+		PropositionalVariable n = new PropositionalVariable("n");
+		PropositionalVariable bl = new PropositionalVariable("bl");
+		PropositionalVariable bc = new PropositionalVariable("bc");
+
 		// Subformula: r -> p
 		Implies imp = new Implies(r, p);
 		
@@ -57,6 +64,9 @@ public class CnfExample
 		
 		// Subformula q & s
 		And and_2 = new And(q, s);
+
+		And First1 = new And(l,c,n);
+		And First2 = new And();
 		
 		// The whole formula
 		Or big_formula = new Or(p, and_1, and_2);
