@@ -31,7 +31,9 @@ public class Sudoku {
 
         And prop2 = getProp("prop2",allNumbersSort);
         And prop3 = getProp("prop3",allNumbersSort);
-        getProp4(allNumbersSort);
+        And prop1=getProp1(allNumbersSort);
+        System.out.println(prop1);
+        //getProp4(allNumbersSort);
 
 
 
@@ -46,6 +48,43 @@ public class Sudoku {
         System.out.println(Arrays.toString(allNumberInCase));
 
 
+    }
+
+    public static And getProp1(PropositionalVariable[][][] allNumbersSort) {
+        Implies[] tabImplic = new Implies[9];
+        Not[] allColumnFirstLine = new Not[8];
+        Or[] tabOrImplic = new Or[9];
+        int m=0;
+        int increment = 0;
+
+            for (int l = 0; l < 9; l++) {
+                for (int c = 0; c < 9; c++) {
+                    for (int n = 0; n < 9; n++) {
+                        if(allNumbersSort[l][c][n] != allNumbersSort[l][c][m]) {
+
+                            allColumnFirstLine[increment] = new Not(allNumbersSort[l][c][n]);
+                            increment++;
+                        }
+                        }
+                    increment=0;
+
+                    tabImplic[c] = new Implies(allNumbersSort[l][c][m], new Or(allColumnFirstLine));
+                    m++;
+                }
+                m=0;
+
+
+
+
+
+
+                tabOrImplic[l] = new Or(tabImplic);
+
+
+            }
+
+
+        return new And(tabOrImplic);
     }
 
     private static Implies getNotOfBox(PropositionalVariable[][][] allNumbersSort, int n) {
