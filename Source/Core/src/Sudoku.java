@@ -27,21 +27,24 @@ public class Sudoku {
                 System.out.println(Arrays.toString(allNumbersSort[i][j]));
             }
         }
-        Implies[] test = new Implies[9];
+        Or[] tabOrImplic  = new Or[9];
+        Implies[] tabImplic = new Implies[9];
         Not[] allColumnFirstLine = new Not[8];
 
-
-        for (int n = 0; n < 9; n++) {
-            for (int i = 1; i < 9; i++) {
-                allColumnFirstLine[i-1] =  new Not(allNumbersSort[0][i][n]);
+        for (int l = 0; l < 9; l++) {
+            for (int n = 0; n < 9; n++) {
+                for (int c = 1; c < 9; c++) {
+                    allColumnFirstLine[c-1] =  new Not(allNumbersSort[l][c][n]);
+                }
+                tabImplic[n] = new Implies(allNumbersSort[l][0][n],new And(allColumnFirstLine));
             }
-            test[n] = new Implies(allNumbersSort[0][0][n],new And(allColumnFirstLine));
+            tabOrImplic[l]=new Or(tabImplic);
         }
 
 
 
 
-        System.out.println(new Or(test));
+        And secondProp = new And(tabOrImplic);
 
     }
 
