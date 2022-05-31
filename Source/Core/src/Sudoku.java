@@ -1,7 +1,6 @@
-import stev.booleans.And;
-import stev.booleans.Not;
-import stev.booleans.Or;
-import stev.booleans.PropositionalVariable;
+import stev.booleans.*;
+
+import java.util.Arrays;
 
 /**
  * Project: stev-booleans
@@ -10,41 +9,40 @@ import stev.booleans.PropositionalVariable;
 public class Sudoku {
 
     public static void main(String[] args) {
-        PropositionalVariable[] lines = new PropositionalVariable[9];
-        PropositionalVariable[] columns = new PropositionalVariable[9];
-        PropositionalVariable[] numbers = new PropositionalVariable[9];
+        PropositionalVariable[] allNumbers = new  PropositionalVariable[(9*9*9)];
+        PropositionalVariable[][][] allNumbersSort = new  PropositionalVariable[9][9][9];
 
-        for (int i = 0; i < 9 ; i++) {
-            int j = i+1;
-            lines[i] = new PropositionalVariable("l"+j);
-            columns[i] = new PropositionalVariable("c"+j);
-            numbers[i] = new PropositionalVariable("r"+j);
 
+        for (int l = 0; l < 9; l++) {
+            for (int c = 0; c < 9; c++) {
+                for (int n = 0; n < 9; n++) {
+                    allNumbers[(l*81)+(c*9)+n] = new PropositionalVariable("n"+(l+1)+(c+1)+(n+1));
+                    allNumbersSort[l][c][n] = new PropositionalVariable("n"+(l+1)+(c+1)+(n+1));
+                }
+            }
         }
 
-        And andLines = new And(lines) ;
-        And andColumnss = new And(columns) ;
-        And andNumbers = new And(numbers) ;
-        Or orNumbers = new Or(numbers) ;
-        Or orColumns = new Or(columns) ;
-        Or orLines = new Or(lines) ;
-
-        //First proposition
-        And eachCaseShouldHaveOneAtLeastOneNumber = new And(andLines,andColumnss,orNumbers);
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                System.out.println(Arrays.toString(allNumbersSort[i][j]));
+            }
+        }
+        Implies[] test = new Implies[9];
+        Not[] allColumnFirstLine = new Not[8];
 
 
-        //Third proposition
-        And eachNumberShouldBeAtLeastOneTImeInLine = new And(andLines,andNumbers,orColumns);
+        for (int n = 0; n < 9; n++) {
+            for (int i = 1; i < 9; i++) {
+                allColumnFirstLine[i-1] =  new Not(allNumbersSort[0][i][n]);
+            }
+            test[n] = new Implies(allNumbersSort[0][0][n],new And(allColumnFirstLine));
+        }
 
-        //Third proposition
-        And eachNumberShouldBeAtLeastOneTImeInColumn = new And(andColumnss,andNumbers,orLines);
 
 
-        System.out.println(eachCaseShouldHaveOneAtLeastOneNumber);
-        System.out.println(eachNumberShouldBeAtLeastOneTImeInLine);
-        System.out.println(eachNumberShouldBeAtLeastOneTImeInColumn);
+
+        System.out.println(new Or(test));
 
     }
-
 
 }
