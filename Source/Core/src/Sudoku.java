@@ -33,6 +33,9 @@ public class Sudoku {
         And eachCaseShouldHaveOneAtLeastOneNumber = new And(andLines,andColumnss,orNumbers);
 
 
+        //First proposition
+        And firstproposition= new And()
+
         //Third proposition
         And eachNumberShouldBeAtLeastOneTImeInLine = new And(andLines,andNumbers,orColumns);
 
