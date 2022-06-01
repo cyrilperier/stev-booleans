@@ -42,11 +42,12 @@ public class Sudoku {
     public static void getProp4(PropositionalVariable[][][] allNumbersSort){
         And[] allSudoku = new And[3];
         Or[] firstColumnOfSquarre = new Or[3];
-        Implies[] allNumberInCase = new Implies[9];
+        Or[] allNumberInCase = new Or[9];
+
         for (int c = 0; c < 7; c += 3) {
             for (int l = 0; l < 7; l += 3) {
                 for (int n = 0; n < 9; n++) {
-                    allNumberInCase[n] = getNotOfBox(allNumbersSort,l,c,n);
+                    allNumberInCase[n] = new Or(getNotOfBox(allNumbersSort,l,c,n));
                 }
                 Or oneSquarre = new Or(allNumberInCase);
 
@@ -85,11 +86,6 @@ public class Sudoku {
                 }
                 m=0;
 
-
-
-
-
-
                 tabOrImplic[l] = new Or(tabImplic);
 
 
@@ -99,43 +95,54 @@ public class Sudoku {
         return new And(tabOrImplic);
     }
 
-    private static Implies getNotOfBox(PropositionalVariable[][][] allNumbersSort, int l,int c, int n) {
-        PropositionalVariable numberSelected = allNumbersSort[l][c][n];
-        Not[] notTheSameNumberInBox = new Not[8];
-        PropositionalVariable toKeep;
-        int increment = 0;
+    private static Implies[] getNotOfBox(PropositionalVariable[][][] allNumbersSort, int l,int c, int n) {
+        Implies[] eachCaseInSquarre = new Implies[9];
+        for (int caseInSquarre = 0; caseInSquarre < 9; caseInSquarre++) {
+            PropositionalVariable numberSelected = null;
+            if( caseInSquarre < 3){
+                numberSelected = allNumbersSort[l][(c + caseInSquarre)][n];
+            } else if (caseInSquarre < 6) {
+                int j = caseInSquarre % 3;
+                numberSelected = allNumbersSort[(l+1)][(c + j)][n];
+            } else {
+                int j = caseInSquarre % 6;
+                numberSelected = allNumbersSort[(l+2)][(c + j)][n];
+            }
+
+            Not[] notTheSameNumberInBox = new Not[8];
+            PropositionalVariable toKeep;
+            int increment = 0;
             for (int i = 0; i < 10; i++) {
                 if( i < 3 ){
                     toKeep = allNumbersSort[(l)][i+c][n];
-                    if( toKeep != numberSelected){
-                        notTheSameNumberInBox[increment] =  new Not(toKeep);
-                        increment++;
-
-                    }
+                    increment = incrementIfNotSameProp(numberSelected, notTheSameNumberInBox, toKeep, increment);
                 }
                 else if(i < 6){
                     int j = i % 3;
                     toKeep = allNumbersSort[(1+l)][j+c][n];
-                    if( toKeep != numberSelected){
-                        notTheSameNumberInBox[increment] =  new Not(toKeep);
-                        increment++;
-
-                    }
+                    increment = incrementIfNotSameProp(numberSelected, notTheSameNumberInBox, toKeep, increment);
                 }else if(i < 9){
                     int j = i % 6;
                     toKeep = allNumbersSort[(2+l)][j+c][n];
-                    if( toKeep != numberSelected){
-                        notTheSameNumberInBox[increment] =  new Not(toKeep);
-                        increment++;
-                    }
-
+                    increment = incrementIfNotSameProp(numberSelected, notTheSameNumberInBox, toKeep, increment);
                 }
 
-
             }
+            eachCaseInSquarre[caseInSquarre] = new Implies(numberSelected,new And(notTheSameNumberInBox));
+        }
 
-        return new Implies(numberSelected,new And(notTheSameNumberInBox));
+
+        return eachCaseInSquarre;
     }
+
+    private static int incrementIfNotSameProp(PropositionalVariable numberSelected, Not[] notTheSameNumberInBox, PropositionalVariable toKeep, int increment) {
+        if( toKeep != numberSelected){
+            notTheSameNumberInBox[increment] =  new Not(toKeep);
+            increment++;
+        }
+        return increment;
+    }
+
 
     public static And getProp(String prop,PropositionalVariable[][][] allNumbersSort){
         Or[] tabOrImplic  = new Or[9];
