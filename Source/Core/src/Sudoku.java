@@ -66,33 +66,43 @@ public class Sudoku {
     public static And getProp1(PropositionalVariable[][][] allNumbersSort) {
         Implies[] tabImplic = new Implies[9];
         Not[] allColumnFirstLine = new Not[8];
-        Or[] tabOrImplic = new Or[9];
-        int m=0;
+        And[] tabAndImplic = new And[9];
+        Or[] tabOrImplicCase = new Or[9];
+
         int increment = 0;
 
             for (int l = 0; l < 9; l++) {
                 for (int c = 0; c < 9; c++) {
-                    for (int n = 0; n < 9; n++) {
-                        if(allNumbersSort[l][c][n] != allNumbersSort[l][c][m]) {
+                    for (int m = 0; m < 9; m++) {
+                        for (int n = 0; n < 9; n++) {
+                            if (allNumbersSort[l][c][n] != allNumbersSort[l][c][m]) {
 
-                            allColumnFirstLine[increment] = new Not(allNumbersSort[l][c][n]);
-                            increment++;
+                                allColumnFirstLine[increment] = new Not(allNumbersSort[l][c][n]);
+                                increment++;
+                            }
                         }
-                        }
-                    increment=0;
+                        increment = 0;
 
-                    tabImplic[c] = new Implies(allNumbersSort[l][c][m], new Or(allColumnFirstLine));
-                    m++;
+                        tabImplic[m] = new Implies(allNumbersSort[l][c][m], new Or(allColumnFirstLine));
+
+                    }
+
+                    tabOrImplicCase[c] = new Or(tabImplic);
                 }
-                m=0;
 
-                tabOrImplic[l] = new Or(tabImplic);
+
+
+
+
+
+
+                tabAndImplic[l] = new And(tabOrImplicCase);
 
 
             }
 
 
-        return new And(tabOrImplic);
+        return new And(tabAndImplic);
     }
 
     private static Implies[] getNotOfBox(PropositionalVariable[][][] allNumbersSort, int l,int c, int n) {
