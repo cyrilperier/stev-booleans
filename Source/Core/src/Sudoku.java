@@ -41,21 +41,23 @@ public class Sudoku {
 
     public static void getProp4(PropositionalVariable[][][] allNumbersSort){
         And[] allSudoku = new And[3];
-        And[] firstColumnOfSquarre = new And[3];
+        Or[] firstColumnOfSquarre = new Or[3];
         Implies[] allNumberInCase = new Implies[9];
-        
-        for (int l = 0; l < 7; l += 3) {
-            for (int n = 0; n < 9; n++) {
-                allNumberInCase[n] = getNotOfBox(allNumbersSort,l,n);
-            }
-            And oneSquarre = new And(allNumberInCase);
+        for (int c = 0; c < 7; c += 3) {
+            for (int l = 0; l < 7; l += 3) {
+                for (int n = 0; n < 9; n++) {
+                    allNumberInCase[n] = getNotOfBox(allNumbersSort,l,c,n);
+                }
+                Or oneSquarre = new Or(allNumberInCase);
 
-            firstColumnOfSquarre[(l/3)] = oneSquarre;
+                firstColumnOfSquarre[(l/3)] = oneSquarre;
+            }
+            allSudoku[(c/3)] = new And(firstColumnOfSquarre);
         }
 
-        System.out.println(firstColumnOfSquarre[0]);
-        System.out.println(firstColumnOfSquarre[1]);
-        System.out.println(firstColumnOfSquarre[2]);
+        System.out.println(allSudoku[0]);
+        System.out.println(allSudoku[1]);
+        System.out.println(allSudoku[2]);
 
 
     }
@@ -97,14 +99,14 @@ public class Sudoku {
         return new And(tabOrImplic);
     }
 
-    private static Implies getNotOfBox(PropositionalVariable[][][] allNumbersSort, int l, int n) {
-        PropositionalVariable numberSelected = allNumbersSort[l][0][n];
+    private static Implies getNotOfBox(PropositionalVariable[][][] allNumbersSort, int l,int c, int n) {
+        PropositionalVariable numberSelected = allNumbersSort[l][c][n];
         Not[] notTheSameNumberInBox = new Not[8];
         PropositionalVariable toKeep;
         int increment = 0;
             for (int i = 0; i < 10; i++) {
                 if( i < 3 ){
-                    toKeep = allNumbersSort[(l)][i][n];
+                    toKeep = allNumbersSort[(l)][i+c][n];
                     if( toKeep != numberSelected){
                         notTheSameNumberInBox[increment] =  new Not(toKeep);
                         increment++;
@@ -113,7 +115,7 @@ public class Sudoku {
                 }
                 else if(i < 6){
                     int j = i % 3;
-                    toKeep = allNumbersSort[(1+l)][j][n];
+                    toKeep = allNumbersSort[(1+l)][j+c][n];
                     if( toKeep != numberSelected){
                         notTheSameNumberInBox[increment] =  new Not(toKeep);
                         increment++;
@@ -121,7 +123,7 @@ public class Sudoku {
                     }
                 }else if(i < 9){
                     int j = i % 6;
-                    toKeep = allNumbersSort[(2+l)][j][n];
+                    toKeep = allNumbersSort[(2+l)][j+c][n];
                     if( toKeep != numberSelected){
                         notTheSameNumberInBox[increment] =  new Not(toKeep);
                         increment++;
