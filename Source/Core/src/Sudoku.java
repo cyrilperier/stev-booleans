@@ -1,5 +1,6 @@
 import stev.booleans.*;
 
+import java.sql.Array;
 import java.util.Arrays;
 
 /**
@@ -10,6 +11,21 @@ public class Sudoku {
 
     public static void main(String[] args) {
 
+        // Retrieve the string of game entries passed in args
+        String gameString = args[0];
+        char[][] gameTable = new char[9][9];
+
+        // Convert game string to a 2D Array of size 9x9
+        int charIndex = 0;
+        for (int i = 0; i < gameTable.length; i++) {
+            for (int j = 0; j < gameTable[0].length; j++) {
+                gameTable[i][j] = gameString.charAt(charIndex);
+                charIndex++;
+            }
+        }
+
+        // Print game array
+        System.out.println(Arrays.deepToString(gameTable));
 
         
         BooleanFormula cnf = modelisationStevBoolean();
@@ -47,7 +63,7 @@ public class Sudoku {
 
     public static And getProp4(PropositionalVariable[][][] allNumbersSort){
         And[] allSudoku = new And[3];
-        Or[] firstColumnOfSquarre = new Or[3];
+        Or[] firstColumnOfSquare = new Or[3];
         Or[] allNumberInCase = new Or[9];
 
         for (int c = 0; c < 7; c += 3) {
@@ -55,11 +71,11 @@ public class Sudoku {
                 for (int n = 0; n < 9; n++) {
                     allNumberInCase[n] = new Or(getNotOfBox(allNumbersSort,l,c,n));
                 }
-                Or oneSquarre = new Or(allNumberInCase);
+                Or oneSquare = new Or(allNumberInCase);
 
-                firstColumnOfSquarre[(l/3)] = oneSquarre;
+                firstColumnOfSquare[(l/3)] = oneSquare;
             }
-            allSudoku[(c/3)] = new And(firstColumnOfSquarre);
+            allSudoku[(c/3)] = new And(firstColumnOfSquare);
         }
 
         return new And(allSudoku);
@@ -103,16 +119,16 @@ public class Sudoku {
     }
 
     private static Implies[] getNotOfBox(PropositionalVariable[][][] allNumbersSort, int l,int c, int n) {
-        Implies[] eachCaseInSquarre = new Implies[9];
-        for (int caseInSquarre = 0; caseInSquarre < 9; caseInSquarre++) {
+        Implies[] eachCaseInSquare = new Implies[9];
+        for (int caseInSquare = 0; caseInSquare < 9; caseInSquare++) {
             PropositionalVariable numberSelected = null;
-            if( caseInSquarre < 3){
-                numberSelected = allNumbersSort[l][(c + caseInSquarre)][n];
-            } else if (caseInSquarre < 6) {
-                int j = caseInSquarre % 3;
+            if( caseInSquare < 3){
+                numberSelected = allNumbersSort[l][(c + caseInSquare)][n];
+            } else if (caseInSquare < 6) {
+                int j = caseInSquare % 3;
                 numberSelected = allNumbersSort[(l+1)][(c + j)][n];
             } else {
-                int j = caseInSquarre % 6;
+                int j = caseInSquare % 6;
                 numberSelected = allNumbersSort[(l+2)][(c + j)][n];
             }
 
@@ -135,11 +151,11 @@ public class Sudoku {
                 }
 
             }
-            eachCaseInSquarre[caseInSquarre] = new Implies(numberSelected,new And(notTheSameNumberInBox));
+            eachCaseInSquare[caseInSquare] = new Implies(numberSelected,new And(notTheSameNumberInBox));
         }
 
 
-        return eachCaseInSquarre;
+        return eachCaseInSquare;
     }
 
     private static int incrementIfNotSameProp(PropositionalVariable numberSelected, Not[] notTheSameNumberInBox, PropositionalVariable toKeep, int increment) {
