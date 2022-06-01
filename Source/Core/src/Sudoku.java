@@ -19,7 +19,9 @@ public class Sudoku {
         int charIndex = 0;
         for (int i = 0; i < gameTable.length; i++) {
             for (int j = 0; j < gameTable[0].length; j++) {
-                gameTable[i][j] = gameString.charAt(charIndex);
+                if (gameString.charAt(charIndex) == '#')
+                gameTable[i][j] = ' ';
+                else gameTable[i][j] = gameString.charAt(charIndex);
                 charIndex++;
             }
         }
@@ -27,7 +29,7 @@ public class Sudoku {
         // Print game array
         System.out.println(Arrays.deepToString(gameTable));
 
-        
+
         BooleanFormula cnf = modelisationStevBoolean();
         System.out.println(cnf);
 
