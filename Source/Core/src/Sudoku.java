@@ -9,6 +9,9 @@ import java.util.Arrays;
 public class Sudoku {
 
     public static void main(String[] args) {
+
+
+        
         BooleanFormula cnf = modelisationStevBoolean();
         System.out.println(cnf);
 
