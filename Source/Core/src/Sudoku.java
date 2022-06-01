@@ -9,6 +9,14 @@ import java.util.Arrays;
 public class Sudoku {
 
     public static void main(String[] args) {
+        BooleanFormula cnf = modelisationStevBoolean();
+        System.out.println(cnf);
+
+        int[][] clauses = cnf.getClauses();
+
+    }
+
+    private static BooleanFormula modelisationStevBoolean() {
         PropositionalVariable[] allNumbers = new  PropositionalVariable[(9*9*9)];
         PropositionalVariable[][][] allNumbersSort = new  PropositionalVariable[9][9][9];
 
@@ -22,24 +30,19 @@ public class Sudoku {
             }
         }
 
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-//                System.out.println(Arrays.toString(allNumbersSort[i][j]));
-            }
-        }
-//        System.out.println(allNumbersSort[1][0][0]);
 
+        And prop1=getProp1(allNumbersSort);
         And prop2 = getProp("prop2",allNumbersSort);
         And prop3 = getProp("prop3",allNumbersSort);
-        And prop1=getProp1(allNumbersSort);
-//        System.out.println(prop1);
-        getProp4(allNumbersSort);
+        And prop4 = getProp4(allNumbersSort);
 
+        And propTotal = new And(prop1,prop2,prop3,prop4);
 
+        return BooleanFormula.toCnf(propTotal);
 
     }
 
-    public static void getProp4(PropositionalVariable[][][] allNumbersSort){
+    public static And getProp4(PropositionalVariable[][][] allNumbersSort){
         And[] allSudoku = new And[3];
         Or[] firstColumnOfSquarre = new Or[3];
         Or[] allNumberInCase = new Or[9];
@@ -56,9 +59,7 @@ public class Sudoku {
             allSudoku[(c/3)] = new And(firstColumnOfSquarre);
         }
 
-        System.out.println(allSudoku[0]);
-        System.out.println(allSudoku[1]);
-        System.out.println(allSudoku[2]);
+        return new And(allSudoku);
 
 
     }
@@ -90,14 +91,7 @@ public class Sudoku {
                     tabOrImplicCase[c] = new Or(tabImplic);
                 }
 
-
-
-
-
-
-
                 tabAndImplic[l] = new And(tabOrImplicCase);
-
 
             }
 
