@@ -25,9 +25,10 @@ public class Sudoku {
 
         int[][] clauses = cnf.getClauses();
 
+//        System.out.println(Arrays.deepToString(sudoku));
         System.out.println(Arrays.deepToString(clauses));
 
-        solveProblem(clauses);
+//        solveProblem(clauses);
 
     }
 
@@ -47,6 +48,7 @@ public class Sudoku {
         IProblem problem = solver;
 
         if (problem.isSatisfiable()){
+            System.out.println(Arrays.toString(problem.findModel()));
             System.out.println("Solution");
         }else{
             System.out.println("Pas de dsolution");
