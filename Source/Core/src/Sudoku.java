@@ -29,10 +29,10 @@ public class Sudoku {
 //        System.out.println(Arrays.deepToString(sudoku));
         //System.out.println(Arrays.deepToString(clauses));
 //        System.out.println(Arrays.deepToString(sudoku));
-        System.out.println(Arrays.deepToString(clauses));
+   //     System.out.println(Arrays.deepToString(clauses));
 
         boolean res = solveProblem(clauses);
-//        WriteSudoku(sudoku);
+        WriteSudoku(sudoku);
 
     }
 
@@ -56,7 +56,6 @@ public class Sudoku {
 
         if (problem.isSatisfiable()){
             System.out.println("Solution");
-            System.out.println(Arrays.toString(problem.findModel()));
             return true;
         }else{
             System.out.println("Pas de de solution");

@@ -38,7 +38,7 @@ public class ModelisationBoolean {
 //        System.out.println("Proposition 1 : Chaque case ne peut contenir qu’un seul chiffre \n" + prop1);
 
         And prop2 = getProp("prop2",allNumbersSort);
-//        System.out.println("\nProposition 2 : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2);
+       System.out.println("\nProposition 2 : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2);
 
         And prop3 = getProp("prop3",allNumbersSort);
 //        System.out.println("\nProposition 3 : Chaque chiffre doit apparaître exactement une fois dans chaque colonne de la grille \n" + prop3);
@@ -193,41 +193,52 @@ public class ModelisationBoolean {
     }
 
 
-    private static And getProp(String prop,PropositionalVariable[][][] allNumbersSort){
-        Or[] tabOrImplic  = new Or[9];
+    public static And getProp(String prop,PropositionalVariable[][][] allNumbersSort){
+        And[] tabOrImplic  = new And[9];
         Implies[] tabImplic = new Implies[9];
         Not[] allColumnFirstLine = new Not[8];
+        And[]tabAndTotal = new And[9];
+        int increment = 0;
+        for(int m = 0;m<9;m++) {
+            for (int l = 0; l < 9; l++) {
+                for (int n = 0; n < 9; n++) {
+                    for (int c = 0; c < 9; c++) {
+                        if (allNumbersSort[l][m][n] != allNumbersSort[l][c][n]) {
 
-        for (int l = 0; l < 9; l++) {
-            for (int n = 0; n < 9; n++) {
-                for (int c = 1; c < 9; c++) {
-                    if(prop.equals("prop2")){
-                        allColumnFirstLine[c-1] =  new Not(allNumbersSort[l][c][n]);
+
+                            if (prop.equals("prop2")) {
+                                allColumnFirstLine[increment] = new Not(allNumbersSort[l][c][n]);
+                                increment++;
+                            } else if (prop.equals("prop3")) {
+                                allColumnFirstLine[increment] = new Not(allNumbersSort[c][l][n]);
+                                increment++;
+
+                            }
+                        }
+                    }
+                    increment = 0;
+                    if (prop.equals("prop2")) {
+                        tabImplic[n] = new Implies(allNumbersSort[l][m][n], new And(allColumnFirstLine));
                     } else if (prop.equals("prop3")) {
-                        allColumnFirstLine[c-1] =  new Not(allNumbersSort[c][l][n]);
-
+                        tabImplic[n] = new Implies(allNumbersSort[m][l][n], new And(allColumnFirstLine));
                     }
                 }
-                if(prop.equals("prop2")){
-                    tabImplic[n] = new Implies(allNumbersSort[l][0][n],new And(allColumnFirstLine));
-                }else if(prop.equals("prop3")){
-                    tabImplic[n] = new Implies(allNumbersSort[0][l][n],new And(allColumnFirstLine));
-                }
+                tabOrImplic[l] = new And(tabImplic);
             }
-            tabOrImplic[l]=new Or(tabImplic);
+        tabAndTotal[m]= new And(tabOrImplic);
         }
-        return new And(tabOrImplic);
+        return new And(tabAndTotal);
     }
 
 
 
 
 
-    private static And getProp1(PropositionalVariable[][][] allNumbersSort) {
+   public static And getProp1(PropositionalVariable[][][] allNumbersSort) {
         Implies[] tabImplic = new Implies[9];
         Not[] allColumnFirstLine = new Not[8];
         And[] tabAndImplic = new And[9];
-        Or[] tabOrImplicCase = new Or[9];
+        And[] tabOrImplicCase = new And[9];
 
         int increment = 0;
 
@@ -242,9 +253,9 @@ public class ModelisationBoolean {
                         }
                     }
                     increment = 0;
-                    tabImplic[m] = new Implies(allNumbersSort[l][c][m], new Or(allColumnFirstLine));
+                    tabImplic[m] = new Implies(allNumbersSort[l][c][m], new And(allColumnFirstLine));
                 }
-                tabOrImplicCase[c] = new Or(tabImplic);
+                tabOrImplicCase[c] = new And(tabImplic);
             }
             tabAndImplic[l] = new And(tabOrImplicCase);
 
