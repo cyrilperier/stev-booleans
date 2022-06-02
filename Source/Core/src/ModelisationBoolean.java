@@ -1,6 +1,8 @@
 import stev.booleans.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Project: stev-booleans
@@ -8,8 +10,21 @@ import java.util.Arrays;
  */
 public class ModelisationBoolean {
 
+    private static PropositionalVariable[] getPropositionOfSudoku(char[][] sudoku) {
+        List<PropositionalVariable> res = new ArrayList<>();
+        res.add(new PropositionalVariable("n111"));
 
-    public static BooleanFormula modelisationStevBoolean() {
+
+
+        //Transform list into array
+        PropositionalVariable[] propostionInArray = new PropositionalVariable[res.size()];
+        res.toArray(propostionInArray);
+
+        return propostionInArray;
+    }
+
+    public static BooleanFormula modelisationStevBoolean(char[][] sudoku) {
+        And propNumberTrue = new And(getPropositionOfSudoku(sudoku));
         PropositionalVariable[] allNumbers = new  PropositionalVariable[(9*9*9)];
         PropositionalVariable[][][] allNumbersSort = new  PropositionalVariable[9][9][9];
 
@@ -25,18 +40,18 @@ public class ModelisationBoolean {
 
 
         And prop1=getProp1(allNumbersSort);
-        System.out.println("Proposition 1 : Chaque case ne peut contenir qu’un seul chiffre \n" + prop1);
+//        System.out.println("Proposition 1 : Chaque case ne peut contenir qu’un seul chiffre \n" + prop1);
 
         And prop2 = getProp("prop2",allNumbersSort);
-        System.out.println("\nProposition 2 : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2);
+//        System.out.println("\nProposition 2 : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2);
 
         And prop3 = getProp("prop3",allNumbersSort);
-        System.out.println("\nProposition 3 : Chaque chiffre doit apparaître exactement une fois dans chaque colonne de la grille \n" + prop3);
+//        System.out.println("\nProposition 3 : Chaque chiffre doit apparaître exactement une fois dans chaque colonne de la grille \n" + prop3);
 
         And prop4 = getProp4(allNumbersSort);
-        System.out.println("\nProposition 4 : Chaque chiffre doit apparaître exactement une fois dans chacune des neuf sous-grilles de taille 3×3 \n" + prop4);
+//        System.out.println("\nProposition 4 : Chaque chiffre doit apparaître exactement une fois dans chacune des neuf sous-grilles de taille 3×3 \n" + prop4);
 
-        And propTotal = new And(prop1,prop2,prop3,prop4);
+        And propTotal = new And(propNumberTrue,prop1,prop2,prop3,prop4);
 
         return BooleanFormula.toCnf(propTotal);
 
