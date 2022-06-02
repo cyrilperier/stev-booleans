@@ -12,15 +12,20 @@ public class ModelisationBoolean {
 
     private static PropositionalVariable[] getPropositionOfSudoku(char[][] sudoku) {
         List<PropositionalVariable> res = new ArrayList<>();
-        res.add(new PropositionalVariable("n111"));
 
-
+        for (int i = 0; i < sudoku.length; i++) {
+            for (int j = 0; j < sudoku[0].length; j++) {
+                if (sudoku[i][j] != ' ') {
+                    res.add(new PropositionalVariable("n" + (i+1) + (j+1) + sudoku[i][j]));
+                }
+            }
+        }
 
         //Transform list into array
-        PropositionalVariable[] propostionInArray = new PropositionalVariable[res.size()];
-        res.toArray(propostionInArray);
+        PropositionalVariable[] propositionInArray = new PropositionalVariable[res.size()];
+        res.toArray(propositionInArray);
 
-        return propostionInArray;
+        return propositionInArray;
     }
 
     public static BooleanFormula modelisationStevBoolean(char[][] sudoku) {
