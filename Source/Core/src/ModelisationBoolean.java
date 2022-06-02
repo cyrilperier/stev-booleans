@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class ModelisationBoolean {
 
-    private static PropositionalVariable[] getPropositionOfSudoku(char[][] sudoku) {
+    public static PropositionalVariable[] getPropositionOfSudoku(char[][] sudoku) {
         List<PropositionalVariable> res = new ArrayList<>();
 
         for (int i = 0; i < sudoku.length; i++) {
@@ -47,12 +47,9 @@ public class ModelisationBoolean {
 //        System.out.println("\nProposition 4 : Chaque chiffre doit apparaître exactement une fois dans chacune des neuf sous-grilles de taille 3×3 \n" + prop4);
 
 //        System.out.println(propNumberTrue +" \n" + prop1);
-//        And propTotal = new And(prop1,prop2,prop3,prop4, propNumberTrue);
-        And propTest = new And(getNotOfBox(allNumbersSort,0,0,0)[0]);
-        System.out.println(propNumberTrue);
-        System.out.println(propTest+"\n");
+        And propTotal = new And(prop1,prop2,prop3,prop4, propNumberTrue);
 
-        And propTotal = new And(propTest,propNumberTrue);
+
 
         return BooleanFormula.toCnf(propTotal);
 
@@ -62,7 +59,7 @@ public class ModelisationBoolean {
      * Method to create all proposition of a sudoku
      * @return PropositionalVariable[][][] all proposition
      */
-    private static PropositionalVariable[][][] createAllProp() {
+    public static PropositionalVariable[][][] createAllProp() {
         PropositionalVariable[][][] allNumbersSort = new  PropositionalVariable[9][9][9];
         for (int l = 0; l < 9; l++) {
             for (int c = 0; c < 9; c++) {
@@ -131,7 +128,7 @@ public class ModelisationBoolean {
      * @param n le nombre qu'on est en train de faire
      * @return
      */
-    private static Implies[] getNotOfBox(PropositionalVariable[][][] allNumbersSort, int l,int c, int n) {
+    static Implies[] getNotOfBox(PropositionalVariable[][][] allNumbersSort, int l, int c, int n) {
         Implies[] eachCaseInSquare = new Implies[9];
         //Pour chaque case du carré
         for (int caseInSquare = 0; caseInSquare < 9; caseInSquare++) {
