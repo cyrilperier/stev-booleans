@@ -36,7 +36,7 @@ public class ModelisationBoolean {
         And prop4 = getProp4(allNumbersSort);
         System.out.println("\nProposition 4 : Chaque chiffre doit apparaître exactement une fois dans chacune des neuf sous-grilles de taille 3×3 \n" + prop4);
 
-        And propTotal = new And(prop1,prop2,prop3,prop4);
+        And propTotal = new And(prop1);
 
         return BooleanFormula.toCnf(propTotal);
 
@@ -173,6 +173,8 @@ public class ModelisationBoolean {
         }
         return new And(tabOrImplic);
     }
+
+
 
 
 

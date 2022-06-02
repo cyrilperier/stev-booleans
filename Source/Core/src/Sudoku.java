@@ -25,15 +25,16 @@ public class Sudoku {
 
         int[][] clauses = cnf.getClauses();
 
-//        System.out.println(Arrays.deepToString(sudoku));
+        System.out.println(Arrays.deepToString(sudoku));
         System.out.println(Arrays.deepToString(clauses));
 
-//        solveProblem(clauses);
+        solveProblem(clauses);
+        WriteSudoku(sudoku);
 
     }
 
     private static void solveProblem(int[][] clauses) throws ContradictionException, TimeoutException {
-        final int MAXVAR = 1000000;
+        final int MAXVAR = 729;
         final int NBCLAUSES = clauses.length;
 
         ISolver solver= SolverFactory.newDefault();
@@ -42,6 +43,7 @@ public class Sudoku {
         solver.setExpectedNumberOfClauses(NBCLAUSES);
 
         for (int[] clause : clauses) {
+
             solver.addClause(new VecInt(clause));
         }
 
@@ -49,9 +51,10 @@ public class Sudoku {
 
         if (problem.isSatisfiable()){
             System.out.println(Arrays.toString(problem.findModel()));
+            System.out.println(problem.model(2));
             System.out.println("Solution");
         }else{
-            System.out.println("Pas de dsolution");
+            System.out.println("Pas de de solution");
         }
     }
 
@@ -71,6 +74,29 @@ public class Sudoku {
             }
         }
         return gameTable;
+    }
+
+    private static void WriteSudoku(char[][] sudoku) {
+        for(int j=0;j<9;j++) {
+            for (int i = 0; i < 9; i++) {
+                if (i == 3 || i==6) {
+                    System.out.print("|");
+                    System.out.print(" ");
+                }
+                if (sudoku[j][i] == ' ') {
+                    System.out.print("-");
+                    System.out.print(" ");
+                } else {
+                    System.out.print(sudoku[j][i]);
+                    System.out.print(" ");
+                }
+
+
+            }
+            System.out.println("");
+            if(j==2 || j==5){
+                System.out.println("======|=======|======");}
+        }
     }
 
 
