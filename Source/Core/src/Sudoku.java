@@ -20,13 +20,14 @@ public class Sudoku {
     public static void main(String[] args) throws ContradictionException, TimeoutException {
 
         char[][] sudoku = getSudokuByArgs(args);
-        BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean(sudoku);
-//        System.out.println(cnf);
+
+        BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean(sudoku); ////
+        //System.out.println(cnf);
 
         int[][] clauses = cnf.getClauses();
 
 //        System.out.println(Arrays.deepToString(sudoku));
-        System.out.println(Arrays.deepToString(clauses));
+        //System.out.println(Arrays.deepToString(clauses));
 
 //        solveProblem(clauses);
 
