@@ -30,19 +30,9 @@ public class ModelisationBoolean {
 
     public static BooleanFormula modelisationStevBoolean(char[][] sudoku) {
         And propNumberTrue = new And(getPropositionOfSudoku(sudoku));
-        PropositionalVariable[] allNumbers = new  PropositionalVariable[(9*9*9)];
-        PropositionalVariable[][][] allNumbersSort = new  PropositionalVariable[9][9][9];
+        PropositionalVariable[][][] allNumbersSort = createAllProp();
 
-
-        for (int l = 0; l < 9; l++) {
-            for (int c = 0; c < 9; c++) {
-                for (int n = 0; n < 9; n++) {
-                    allNumbers[(l*81)+(c*9)+n] = new PropositionalVariable("n"+(l+1)+(c+1)+(n+1));
-                    allNumbersSort[l][c][n] = new PropositionalVariable("n"+(l+1)+(c+1)+(n+1));
-                }
-            }
-        }
-
+        System.out.println("Proposition existante :  \n" + propNumberTrue);
 
         And prop1=getProp1(allNumbersSort);
 //        System.out.println("Proposition 1 : Chaque case ne peut contenir qu’un seul chiffre \n" + prop1);
@@ -63,6 +53,22 @@ public class ModelisationBoolean {
     }
 
     /**
+     * Method to create all proposition of a sudoku
+     * @return PropositionalVariable[][][] all proposition
+     */
+    private static PropositionalVariable[][][] createAllProp() {
+        PropositionalVariable[][][] allNumbersSort = new  PropositionalVariable[9][9][9];
+        for (int l = 0; l < 9; l++) {
+            for (int c = 0; c < 9; c++) {
+                for (int n = 0; n < 9; n++) {
+                    allNumbersSort[l][c][n] = new PropositionalVariable("n"+(l+1)+(c+1)+(n+1));
+                }
+            }
+        }
+        return allNumbersSort;
+    }
+
+    /**
      * Create the four proposition
      * @param allNumbersSort
      * @return
@@ -72,16 +78,22 @@ public class ModelisationBoolean {
         Or[] firstColumnOfSquare;
         //Pour chaque Grande colonne (premier indice : 0,0 ; 0,3 ; 0,6)
         for (int c = 0; c < 7; c += 3) {
-            //Pour chaque Grande ligne (premier indice : 0,0 ; 3,0 ; 6,0)
             firstColumnOfSquare = getAllSquareOfOneColumnFOrEachLine(allNumbersSort, c);
             allSudoku[(c/3)] = new And(firstColumnOfSquare);
         }
         return new And(allSudoku);
     }
 
+    /**
+     * Method to get all implies of all square (3) in one big column (line : 0-8)
+     * @param allNumbersSort
+     * @param c number of first indice of big column (0,3,6)
+     * @return
+     */
     private static Or[] getAllSquareOfOneColumnFOrEachLine(PropositionalVariable[][][] allNumbersSort, int c) {
         Or[] firstColumnOfSquare = new Or[3];
         Or[] allNumberInCase;
+        //Pour chaque Grande ligne (premier indice : 0,0 ; 3,0 ; 6,0)
         for (int l = 0; l < 7; l += 3) {
             allNumberInCase = getOnSquarre(allNumbersSort, c, l);
             Or oneSquare = new Or(allNumberInCase);
@@ -91,10 +103,10 @@ public class ModelisationBoolean {
     }
 
     /**
-     * Permet de recuperer toutes les propositions pour un carré tous les numéros
+     * Method to get all implies of one square (line : 0-8)
      * @param allNumbersSort
-     * @param c
-     * @param l
+     * @param c number of first indice of big column (0,3,6)
+     * @param l number of first indice of big line (0,3,6)
      */
     private static Or[] getOnSquarre(PropositionalVariable[][][] allNumbersSort, int c, int l) {
         Or[] allNumberInCase = new Or[9];
@@ -105,7 +117,7 @@ public class ModelisationBoolean {
     }
 
     /**
-     * Permet de faire chaque la proposition pour chaque carre de sudoku
+     * Method to get all implies of one boxsquarre
      * @param allNumbersSort
      * @param l l'indice de ligne de quel case on se situe
      * @param c l'indice de colonne de quel case on se situe
@@ -123,6 +135,15 @@ public class ModelisationBoolean {
         return eachCaseInSquare;
     }
 
+    /**
+     * Method to get all implies for one case in squarre
+     * @param allNumbersSort
+     * @param l
+     * @param c
+     * @param n
+     * @param eachCaseInSquare
+     * @param caseInSquare
+     */
     private static void getImpliesForOneCase(PropositionalVariable[][][] allNumbersSort, int l, int c, int n, Implies[] eachCaseInSquare, int caseInSquare) {
         PropositionalVariable numberSelected = null;
         //Permet de choisir le nombre qui sera a gauche de l'implication
