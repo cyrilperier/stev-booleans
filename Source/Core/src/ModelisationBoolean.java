@@ -32,7 +32,7 @@ public class ModelisationBoolean {
         And propNumberTrue = new And(getPropositionOfSudoku(sudoku));
         PropositionalVariable[][][] allNumbersSort = createAllProp();
 
-        System.out.println("Proposition existante :  \n" + propNumberTrue);
+//        System.out.println("Proposition existante :  \n" + propNumberTrue);
 
         And prop1=getProp1(allNumbersSort);
 //        System.out.println("Proposition 1 : Chaque case ne peut contenir qu’un seul chiffre \n" + prop1);
@@ -46,7 +46,13 @@ public class ModelisationBoolean {
         And prop4 = getProp4(allNumbersSort);
 //        System.out.println("\nProposition 4 : Chaque chiffre doit apparaître exactement une fois dans chacune des neuf sous-grilles de taille 3×3 \n" + prop4);
 
-        And propTotal = new And(propNumberTrue,prop1,prop2,prop3,prop4);
+//        System.out.println(propNumberTrue +" \n" + prop1);
+//        And propTotal = new And(prop1,prop2,prop3,prop4, propNumberTrue);
+        And propTest = new And(getNotOfBox(allNumbersSort,0,0,0)[0]);
+        System.out.println(propNumberTrue);
+        System.out.println(propTest+"\n");
+
+        And propTotal = new And(propTest,propNumberTrue);
 
         return BooleanFormula.toCnf(propTotal);
 

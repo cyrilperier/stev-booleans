@@ -22,14 +22,14 @@ public class Sudoku {
         char[][] sudoku = getSudokuByArgs(args);
 
         BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean(sudoku); ////
-        //System.out.println(cnf);
+        System.out.println(cnf);
 
         int[][] clauses = cnf.getClauses();
 
 //        System.out.println(Arrays.deepToString(sudoku));
-        //System.out.println(Arrays.deepToString(clauses));
+        System.out.println(Arrays.deepToString(clauses));
 
-//        solveProblem(clauses);
+        solveProblem(clauses);
 
     }
 
@@ -51,8 +51,9 @@ public class Sudoku {
         IProblem problem = solver;
 
         if (problem.isSatisfiable()){
-            System.out.println(Arrays.toString(problem.findModel()));
             System.out.println("Solution");
+//            System.out.println(Arrays.toString(problem.findModel()));
+//            System.out.println(Arrays.toString(problem.model()));
         }else{
             System.out.println("Pas de dsolution");
         }
