@@ -56,8 +56,7 @@ public class Sudoku {
 
         if (problem.isSatisfiable()){
             System.out.println("Solution");
-            System.out.println(Arrays.toString(problem.findModel()));
-            System.out.println(problem.model(2));
+
         }else{
             System.out.println("Pas de de solution");
         }
