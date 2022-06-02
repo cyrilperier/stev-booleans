@@ -76,9 +76,9 @@ public class ModelisationBoolean {
      * @param allNumbersSort
      * @return
      */
-    private static And getProp4(PropositionalVariable[][][] allNumbersSort){
+    public static And getProp4(PropositionalVariable[][][] allNumbersSort){
         And[] allSudoku = new And[3];
-        Or[] firstColumnOfSquare;
+        And[] firstColumnOfSquare;
         //Pour chaque Grande colonne (premier indice : 0,0 ; 0,3 ; 0,6)
         for (int c = 0; c < 7; c += 3) {
             //Pour chaque Grande ligne (premier indice : 0,0 ; 3,0 ; 6,0)
@@ -94,13 +94,13 @@ public class ModelisationBoolean {
      * @param c number of first indice of big column (0,3,6)
      * @return
      */
-    public static Or[] getAllSquareOfOneColumnFOrEachLine(PropositionalVariable[][][] allNumbersSort, int c) {
-        Or[] firstColumnOfSquare = new Or[3];
+    public static And[] getAllSquareOfOneColumnFOrEachLine(PropositionalVariable[][][] allNumbersSort, int c) {
+        And[] firstColumnOfSquare = new And[3];
         And[] allNumberInCase;
         //Pour chaque Grande ligne (premier indice : 0,0 ; 3,0 ; 6,0)
         for (int l = 0; l < 7; l += 3) {
             allNumberInCase = getOnSquarre(allNumbersSort, c, l);
-            Or oneSquare = new Or(allNumberInCase);
+            And oneSquare = new And(allNumberInCase);
             firstColumnOfSquare[(l/3)] = oneSquare;
         }
         return  firstColumnOfSquare;

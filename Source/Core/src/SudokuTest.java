@@ -98,7 +98,6 @@ public class SudokuTest {
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
         And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
-
         And propTest = new And(ModelisationBoolean.getOnSquarre(allNumbersSort,0,0));
         System.out.println(propNumberTrue);
         System.out.println(propTest+"\n");
@@ -115,23 +114,83 @@ public class SudokuTest {
 
     @Test
     public void solveProblemTestOnThreeSquarres() throws ContradictionException, TimeoutException {
-        sudoku = Sudoku.getSudokuByArgs("#################################################################################");
+        sudoku = Sudoku.getSudokuByArgs("1########2########3#########1#######2############################################");
+
+        PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
+        And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
+        
+        And propTest = new And(ModelisationBoolean.getAllSquareOfOneColumnFOrEachLine(allNumbersSort,0));
+
+
+        And propTotal = new And(propTest,propNumberTrue);
+        BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+
+        int[][] clauses = cnf.getClauses();
+
+        System.out.println(Arrays.deepToString(clauses));
+
+        Assert.assertTrue(Sudoku.solveProblem(clauses));
+    }
+
+    @Test
+    public void solveProblemTestOnThreeSquarres_ExcptionBecauseTwo1() throws ContradictionException, TimeoutException {
+        sudoku = Sudoku.getSudokuByArgs("1########2########3#########1#######1############################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
         And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
 
         And propTest = new And(ModelisationBoolean.getAllSquareOfOneColumnFOrEachLine(allNumbersSort,0));
-        System.out.println(propNumberTrue);
-        System.out.println(propTest+"\n");
+
 
         And propTotal = new And(propTest,propNumberTrue);
-//        BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
 
-//        int[][] clauses = cnf.getClauses();
-//
-//        System.out.println(Arrays.deepToString(clauses));
-//
-//        Assert.assertTrue(Sudoku.solveProblem(clauses));
+        int[][] clauses = cnf.getClauses();
+
+        System.out.println(Arrays.deepToString(clauses));
+
+        Assert.assertFalse(Sudoku.solveProblem(clauses));
+    }
+
+
+    @Test
+    public void solveProblemTestOnAllSudoku_Two9InOneSquarre() throws ContradictionException, TimeoutException {
+        sudoku = Sudoku.getSudokuByArgs("1###5####2########3#########4##9####1###9########################################");
+
+        PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
+        And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
+
+        And propTest = new And(ModelisationBoolean.getProp4(allNumbersSort));
+
+
+        And propTotal = new And(propTest,propNumberTrue);
+        BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+
+        int[][] clauses = cnf.getClauses();
+
+        System.out.println(Arrays.deepToString(clauses));
+
+        Assert.assertFalse(Sudoku.solveProblem(clauses));
+    }
+
+    @Test
+    public void solveProblemTestOnAllSudokuGood() throws ContradictionException, TimeoutException {
+        sudoku = Sudoku.getSudokuByArgs("1###5####2########3#########4##2####1###9########################################");
+
+        PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
+        And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
+
+        And propTest = new And(ModelisationBoolean.getProp4(allNumbersSort));
+
+
+        And propTotal = new And(propTest,propNumberTrue);
+        BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+
+        int[][] clauses = cnf.getClauses();
+
+        System.out.println(Arrays.deepToString(clauses));
+
+        Assert.assertTrue(Sudoku.solveProblem(clauses));
     }
 
 }
