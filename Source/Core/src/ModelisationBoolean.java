@@ -84,6 +84,7 @@ public class ModelisationBoolean {
         Or[] firstColumnOfSquare;
         //Pour chaque Grande colonne (premier indice : 0,0 ; 0,3 ; 0,6)
         for (int c = 0; c < 7; c += 3) {
+            //Pour chaque Grande ligne (premier indice : 0,0 ; 3,0 ; 6,0)
             firstColumnOfSquare = getAllSquareOfOneColumnFOrEachLine(allNumbersSort, c);
             allSudoku[(c/3)] = new And(firstColumnOfSquare);
         }
@@ -220,6 +221,8 @@ public class ModelisationBoolean {
         }
         return new And(tabOrImplic);
     }
+
+
 
 
 
