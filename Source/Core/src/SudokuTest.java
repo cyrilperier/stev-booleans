@@ -30,13 +30,13 @@ public class SudokuTest {
 
 
     @Test
-    public void solveProblem() throws ContradictionException, TimeoutException {
-        sudoku = Sudoku.getSudokuByArgs("111######111######111############################################################");
+    public void solveProblemTestOnSquarreNumberOnePresentMultipleTime() throws ContradictionException, TimeoutException {
+        sudoku = Sudoku.getSudokuByArgs("#11######111######111############################################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
         And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
 
-        And propTest = new And(ModelisationBoolean.getNotOfBox(allNumbersSort,0,0,0)[0]);
+        And propTest = new And(ModelisationBoolean.getNotOfBox(allNumbersSort,0,0,0));
         System.out.println(propNumberTrue);
         System.out.println(propTest+"\n");
 
@@ -49,4 +49,89 @@ public class SudokuTest {
 
         Assert.assertFalse(Sudoku.solveProblem(clauses));
     }
+
+    @Test
+    public void solveProblemTestOnSquarreNumberOneNotExisting() throws ContradictionException, TimeoutException {
+        sudoku = Sudoku.getSudokuByArgs("1################################################################################");
+
+        PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
+        And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
+
+        And propTest = new And(ModelisationBoolean.getNotOfBox(allNumbersSort,0,0,0));
+        System.out.println(propNumberTrue);
+        System.out.println(propTest+"\n");
+
+        And propTotal = new And(propTest,propNumberTrue);
+        BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+
+        int[][] clauses = cnf.getClauses();
+
+        System.out.println(Arrays.deepToString(clauses));
+
+        Assert.assertTrue(Sudoku.solveProblem(clauses));
+    }
+
+    @Test
+    public void solveProblemTestOnSquarreWithMultipleNumber() throws ContradictionException, TimeoutException {
+        sudoku = Sudoku.getSudokuByArgs("211######112######111############################################################");
+
+        PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
+        And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
+
+        And propTest = new And(ModelisationBoolean.getOnSquarre(allNumbersSort,0,0));
+        System.out.println(propNumberTrue);
+        System.out.println(propTest+"\n");
+
+        And propTotal = new And(propTest,propNumberTrue);
+        BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+
+        int[][] clauses = cnf.getClauses();
+
+        System.out.println(Arrays.deepToString(clauses));
+
+        Assert.assertFalse(Sudoku.solveProblem(clauses));
+    }
+
+    @Test
+    public void solveProblemTestOnSquarreMultipleNumber() throws ContradictionException, TimeoutException {
+        sudoku = Sudoku.getSudokuByArgs("2########1##########8############################################################");
+
+        PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
+        And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
+
+        And propTest = new And(ModelisationBoolean.getOnSquarre(allNumbersSort,0,0));
+        System.out.println(propNumberTrue);
+        System.out.println(propTest+"\n");
+
+        And propTotal = new And(propTest,propNumberTrue);
+        BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+
+        int[][] clauses = cnf.getClauses();
+
+        System.out.println(Arrays.deepToString(clauses));
+
+        Assert.assertTrue(Sudoku.solveProblem(clauses));
+    }
+
+    @Test
+    public void solveProblemTestOnThreeSquarres() throws ContradictionException, TimeoutException {
+        sudoku = Sudoku.getSudokuByArgs("#################################################################################");
+
+        PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
+        And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
+
+        And propTest = new And(ModelisationBoolean.getAllSquareOfOneColumnFOrEachLine(allNumbersSort,0));
+        System.out.println(propNumberTrue);
+        System.out.println(propTest+"\n");
+
+        And propTotal = new And(propTest,propNumberTrue);
+//        BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+
+//        int[][] clauses = cnf.getClauses();
+//
+//        System.out.println(Arrays.deepToString(clauses));
+//
+//        Assert.assertTrue(Sudoku.solveProblem(clauses));
+    }
+
 }

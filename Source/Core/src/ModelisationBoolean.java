@@ -94,9 +94,9 @@ public class ModelisationBoolean {
      * @param c number of first indice of big column (0,3,6)
      * @return
      */
-    private static Or[] getAllSquareOfOneColumnFOrEachLine(PropositionalVariable[][][] allNumbersSort, int c) {
+    public static Or[] getAllSquareOfOneColumnFOrEachLine(PropositionalVariable[][][] allNumbersSort, int c) {
         Or[] firstColumnOfSquare = new Or[3];
-        Or[] allNumberInCase;
+        And[] allNumberInCase;
         //Pour chaque Grande ligne (premier indice : 0,0 ; 3,0 ; 6,0)
         for (int l = 0; l < 7; l += 3) {
             allNumberInCase = getOnSquarre(allNumbersSort, c, l);
@@ -112,10 +112,10 @@ public class ModelisationBoolean {
      * @param c number of first indice of big column (0,3,6)
      * @param l number of first indice of big line (0,3,6)
      */
-    private static Or[] getOnSquarre(PropositionalVariable[][][] allNumbersSort, int c, int l) {
-        Or[] allNumberInCase = new Or[9];
+    public static And[] getOnSquarre(PropositionalVariable[][][] allNumbersSort, int c, int l) {
+        And[] allNumberInCase = new And[9];
         for (int n = 0; n < 9; n++) {
-            allNumberInCase[n] = new Or(getNotOfBox(allNumbersSort, l, c,n));
+            allNumberInCase[n] = new And(getNotOfBox(allNumbersSort, l, c,n));
         }
         return allNumberInCase;
     }
