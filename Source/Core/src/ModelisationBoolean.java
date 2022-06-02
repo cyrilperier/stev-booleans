@@ -1,6 +1,8 @@
 import stev.booleans.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Project: stev-booleans
@@ -8,38 +10,62 @@ import java.util.Arrays;
  */
 public class ModelisationBoolean {
 
+    private static PropositionalVariable[] getPropositionOfSudoku(char[][] sudoku) {
+        List<PropositionalVariable> res = new ArrayList<>();
 
-    public static BooleanFormula modelisationStevBoolean() {
-        PropositionalVariable[] allNumbers = new  PropositionalVariable[(9*9*9)];
-        PropositionalVariable[][][] allNumbersSort = new  PropositionalVariable[9][9][9];
-
-
-        for (int l = 0; l < 9; l++) {
-            for (int c = 0; c < 9; c++) {
-                for (int n = 0; n < 9; n++) {
-                    allNumbers[(l*81)+(c*9)+n] = new PropositionalVariable("n"+(l+1)+(c+1)+(n+1));
-                    allNumbersSort[l][c][n] = new PropositionalVariable("n"+(l+1)+(c+1)+(n+1));
+        for (int i = 0; i < sudoku.length; i++) {
+            for (int j = 0; j < sudoku[0].length; j++) {
+                if (sudoku[i][j] != ' ') {
+                    res.add(new PropositionalVariable("n" + (i+1) + (j+1) + sudoku[i][j]));
                 }
             }
         }
 
+        //Transform list into array
+        PropositionalVariable[] propositionInArray = new PropositionalVariable[res.size()];
+        res.toArray(propositionInArray);
+
+        return propositionInArray;
+    }
+
+    public static BooleanFormula modelisationStevBoolean(char[][] sudoku) {
+        And propNumberTrue = new And(getPropositionOfSudoku(sudoku));
+        PropositionalVariable[][][] allNumbersSort = createAllProp();
+
+        System.out.println("Proposition existante :  \n" + propNumberTrue);
 
         And prop1=getProp1(allNumbersSort);
-        System.out.println("Proposition 1 : Chaque case ne peut contenir qu’un seul chiffre \n" + prop1);
+//        System.out.println("Proposition 1 : Chaque case ne peut contenir qu’un seul chiffre \n" + prop1);
 
         And prop2 = getProp("prop2",allNumbersSort);
-        System.out.println("\nProposition 2 : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2);
+//        System.out.println("\nProposition 2 : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2);
 
         And prop3 = getProp("prop3",allNumbersSort);
-        System.out.println("\nProposition 3 : Chaque chiffre doit apparaître exactement une fois dans chaque colonne de la grille \n" + prop3);
+//        System.out.println("\nProposition 3 : Chaque chiffre doit apparaître exactement une fois dans chaque colonne de la grille \n" + prop3);
 
         And prop4 = getProp4(allNumbersSort);
-        System.out.println("\nProposition 4 : Chaque chiffre doit apparaître exactement une fois dans chacune des neuf sous-grilles de taille 3×3 \n" + prop4);
+//        System.out.println("\nProposition 4 : Chaque chiffre doit apparaître exactement une fois dans chacune des neuf sous-grilles de taille 3×3 \n" + prop4);
 
-        And propTotal = new And(prop1);
+        And propTotal = new And(propNumberTrue,prop1,prop2,prop3,prop4);
 
         return BooleanFormula.toCnf(propTotal);
 
+    }
+
+    /**
+     * Method to create all proposition of a sudoku
+     * @return PropositionalVariable[][][] all proposition
+     */
+    private static PropositionalVariable[][][] createAllProp() {
+        PropositionalVariable[][][] allNumbersSort = new  PropositionalVariable[9][9][9];
+        for (int l = 0; l < 9; l++) {
+            for (int c = 0; c < 9; c++) {
+                for (int n = 0; n < 9; n++) {
+                    allNumbersSort[l][c][n] = new PropositionalVariable("n"+(l+1)+(c+1)+(n+1));
+                }
+            }
+        }
+        return allNumbersSort;
     }
 
     /**
@@ -59,9 +85,16 @@ public class ModelisationBoolean {
         return new And(allSudoku);
     }
 
+    /**
+     * Method to get all implies of all square (3) in one big column (line : 0-8)
+     * @param allNumbersSort
+     * @param c number of first indice of big column (0,3,6)
+     * @return
+     */
     private static Or[] getAllSquareOfOneColumnFOrEachLine(PropositionalVariable[][][] allNumbersSort, int c) {
         Or[] firstColumnOfSquare = new Or[3];
         Or[] allNumberInCase;
+        //Pour chaque Grande ligne (premier indice : 0,0 ; 3,0 ; 6,0)
         for (int l = 0; l < 7; l += 3) {
             allNumberInCase = getOnSquarre(allNumbersSort, c, l);
             Or oneSquare = new Or(allNumberInCase);
@@ -71,10 +104,10 @@ public class ModelisationBoolean {
     }
 
     /**
-     * Permet de recuperer toutes les propositions pour un carré tous les numéros
+     * Method to get all implies of one square (line : 0-8)
      * @param allNumbersSort
-     * @param c
-     * @param l
+     * @param c number of first indice of big column (0,3,6)
+     * @param l number of first indice of big line (0,3,6)
      */
     private static Or[] getOnSquarre(PropositionalVariable[][][] allNumbersSort, int c, int l) {
         Or[] allNumberInCase = new Or[9];
@@ -85,7 +118,7 @@ public class ModelisationBoolean {
     }
 
     /**
-     * Permet de faire chaque la proposition pour chaque carre de sudoku
+     * Method to get all implies of one boxsquarre
      * @param allNumbersSort
      * @param l l'indice de ligne de quel case on se situe
      * @param c l'indice de colonne de quel case on se situe
@@ -103,6 +136,15 @@ public class ModelisationBoolean {
         return eachCaseInSquare;
     }
 
+    /**
+     * Method to get all implies for one case in squarre
+     * @param allNumbersSort
+     * @param l
+     * @param c
+     * @param n
+     * @param eachCaseInSquare
+     * @param caseInSquare
+     */
     private static void getImpliesForOneCase(PropositionalVariable[][][] allNumbersSort, int l, int c, int n, Implies[] eachCaseInSquare, int caseInSquare) {
         PropositionalVariable numberSelected = null;
         //Permet de choisir le nombre qui sera a gauche de l'implication

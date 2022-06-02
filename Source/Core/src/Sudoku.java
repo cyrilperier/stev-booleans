@@ -7,7 +7,9 @@ import org.sat4j.specs.TimeoutException;
 import stev.booleans.*;
 
 import java.sql.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Project: stev-booleans
@@ -19,12 +21,13 @@ public class Sudoku {
 
         char[][] sudoku = getSudokuByArgs(args);
 
-
-        BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean();
-//        System.out.println(cnf);
+        BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean(sudoku); ////
+        //System.out.println(cnf);
 
         int[][] clauses = cnf.getClauses();
 
+//        System.out.println(Arrays.deepToString(sudoku));
+        //System.out.println(Arrays.deepToString(clauses));
         System.out.println(Arrays.deepToString(sudoku));
         System.out.println(Arrays.deepToString(clauses));
 
@@ -32,6 +35,8 @@ public class Sudoku {
         WriteSudoku(sudoku);
 
     }
+
+
 
     private static void solveProblem(int[][] clauses) throws ContradictionException, TimeoutException {
         final int MAXVAR = 729;
