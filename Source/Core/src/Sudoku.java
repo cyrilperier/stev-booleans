@@ -19,7 +19,7 @@ public class Sudoku {
 
     public static void main(String[] args) throws ContradictionException, TimeoutException {
 
-        char[][] sudoku = getSudokuByArgs(args);
+        char[][] sudoku = getSudokuByArgs(args[0]);
 
         BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean(sudoku); ////
         System.out.println(cnf);
@@ -31,14 +31,14 @@ public class Sudoku {
 //        System.out.println(Arrays.deepToString(sudoku));
         System.out.println(Arrays.deepToString(clauses));
 
-        solveProblem(clauses);
+        boolean res = solveProblem(clauses);
 //        WriteSudoku(sudoku);
 
     }
 
 
 
-    private static void solveProblem(int[][] clauses) throws ContradictionException, TimeoutException {
+    public static boolean solveProblem(int[][] clauses) throws ContradictionException, TimeoutException {
         final int MAXVAR = 729;
         final int NBCLAUSES = clauses.length;
 
@@ -56,15 +56,16 @@ public class Sudoku {
 
         if (problem.isSatisfiable()){
             System.out.println("Solution");
-
+            System.out.println(Arrays.toString(problem.findModel()));
+            return true;
         }else{
             System.out.println("Pas de de solution");
+            return false;
         }
     }
 
-    private static char[][] getSudokuByArgs(String[] args) {
+    public static char[][] getSudokuByArgs(String gameString) {
         // Retrieve the string of game entries passed in args
-        String gameString = args[0];
         char[][] gameTable = new char[9][9];
 
         // Convert game string to a 2D Array of size 9x9
