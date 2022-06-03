@@ -1,3 +1,7 @@
+/**
+ * LAUR08069900, PERC12109605,
+ */
+
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.IProblem;
@@ -66,6 +70,7 @@ public class Sudoku {
                     justPostive) {
                 numberSearch.add(invertGrille.get(i));
             }
+            System.out.println(numberSearch.size());
             System.out.println(numberSearch);
             return numberSearch;
         }else{
