@@ -73,8 +73,7 @@ public class SudokuTest {
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
         And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
 
-        And propTest = new And(ModelisationBoolean.getNotOfBox(allNumbersSort,0,0,0));
-        System.out.println(propNumberTrue);
+        And propTest = new And(ModelisationBoolean.getNotOfBox(allNumbersSort,0,0,0,"notAtRight"));
         System.out.println(propTest+"\n");
 
         And propTotal = new And(propTest,propNumberTrue);
@@ -88,13 +87,35 @@ public class SudokuTest {
     }
 
     @Test
+    public void solveProblemTestShouldHaveOneNumberAtLeastInSquarre() throws Exception {
+        sudoku = Sudoku.getSudokuByArgs("#26493815315728946489651237852147693673985124941362758194836572567214389238579461");
+
+        PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
+        And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
+
+        And propTest = new And(ModelisationBoolean.getOnSquarre(allNumbersSort,0,0));
+        System.out.println(propTest+"\n");
+
+        And propTotal = new And(propTest,propNumberTrue);
+        BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
+
+        int[][] clauses = cnf.getClauses();
+
+
+        List<String> values =  Sudoku.solveProblem(clauses,inverteGrille);
+        System.out.println(values);
+        Assert.assertTrue(values.contains("n117"));
+    }
+
+    @Test
     public void solveProblemTestOnSquarreNumberOneNotExisting() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("1################################################################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
         And propNumberTrue = new And(ModelisationBoolean.getPropositionOfSudoku(sudoku));
 
-        And propTest = new And(ModelisationBoolean.getNotOfBox(allNumbersSort,0,0,0));
+        And propTest = new And(ModelisationBoolean.getNotOfBox(allNumbersSort,0,0,0,"notAtRight"));
         System.out.println(propNumberTrue);
         System.out.println(propTest+"\n");
 

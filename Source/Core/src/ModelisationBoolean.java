@@ -3,6 +3,7 @@ import stev.booleans.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Project: stev-booleans
@@ -113,9 +114,14 @@ public class ModelisationBoolean {
      * @param l number of first indice of big line (0,3,6)
      */
     public static And[] getOnSquarre(PropositionalVariable[][][] allNumbersSort, int c, int l) {
-        And[] allNumberInCase = new And[9];
-        for (int n = 0; n < 9; n++) {
-            allNumberInCase[n] = new And(getNotOfBox(allNumbersSort, l, c,n));
+        And[] allNumberInCase = new And[9*2];
+        for (int n = 0; n < 18; n++) {
+            if( n < 9 ){
+                allNumberInCase[n] = new And(getNotOfBox(allNumbersSort, l, c,n,"notAtRight"));
+            }else{
+
+                allNumberInCase[n] = new And(getNotOfBox(allNumbersSort, l, c,n%9,"notAtLeft"));
+            }
         }
         return allNumberInCase;
     }
@@ -128,13 +134,13 @@ public class ModelisationBoolean {
      * @param n le nombre qu'on est en train de faire
      * @return
      */
-    static Implies[] getNotOfBox(PropositionalVariable[][][] allNumbersSort, int l, int c, int n) {
+    static Implies[] getNotOfBox(PropositionalVariable[][][] allNumbersSort, int l, int c, int n,String type) {
         Implies[] eachCaseInSquare = new Implies[9];
         //Pour chaque case du carré
-        for (int caseInSquare = 0; caseInSquare < 9; caseInSquare++) {
-            getImpliesForOneCase(allNumbersSort, l, c, n, eachCaseInSquare, caseInSquare);
-        }
 
+        for (int caseInSquare = 0; caseInSquare < 9; caseInSquare++) {
+            getImpliesForOneCase(allNumbersSort, l, c, n, eachCaseInSquare, caseInSquare,type);
+        }
 
         return eachCaseInSquare;
     }
@@ -148,8 +154,8 @@ public class ModelisationBoolean {
      * @param eachCaseInSquare
      * @param caseInSquare
      */
-    private static void getImpliesForOneCase(PropositionalVariable[][][] allNumbersSort, int l, int c, int n, Implies[] eachCaseInSquare, int caseInSquare) {
-        PropositionalVariable numberSelected = null;
+    private static void getImpliesForOneCase(PropositionalVariable[][][] allNumbersSort, int l, int c, int n, Implies[] eachCaseInSquare, int caseInSquare,String type) {
+        BooleanFormula numberSelected = null;
         //Permet de choisir le nombre qui sera a gauche de l'implication
         if( caseInSquare < 3){
             numberSelected = allNumbersSort[l][(c + caseInSquare)][n];
@@ -161,32 +167,44 @@ public class ModelisationBoolean {
             numberSelected = allNumbersSort[(l +2)][(c + j)][n];
         }
 
-        Not[] notTheSameNumberInBox = new Not[8];
+
+
+        BooleanFormula[] notTheSameNumberInBox = new BooleanFormula[8];
         PropositionalVariable toKeep;
         int increment = 0;
         //Pour chaque autre nombre du carre, permet de faire la partie droite de l'implication
         for (int i = 0; i < 10; i++) {
             if( i < 3 ){
                 toKeep = allNumbersSort[l][i+ c][n];
-                increment = incrementIfNotSameProp(numberSelected, notTheSameNumberInBox, toKeep, increment);
+                increment = incrementIfNotSameProp(numberSelected, notTheSameNumberInBox, toKeep, increment,type);
             }
             else if(i < 6){
                 int j = i % 3;
                 toKeep = allNumbersSort[(1+ l)][j+ c][n];
-                increment = incrementIfNotSameProp(numberSelected, notTheSameNumberInBox, toKeep, increment);
+                increment = incrementIfNotSameProp(numberSelected, notTheSameNumberInBox, toKeep, increment,type);
             }else if(i < 9){
                 int j = i % 6;
                 toKeep = allNumbersSort[(2+ l)][j+ c][n];
-                increment = incrementIfNotSameProp(numberSelected, notTheSameNumberInBox, toKeep, increment);
+                increment = incrementIfNotSameProp(numberSelected, notTheSameNumberInBox, toKeep, increment,type);
             }
 
         }
-        eachCaseInSquare[caseInSquare] = new Implies(numberSelected,new And(notTheSameNumberInBox));
+
+        if(type.equals("notAtRight")){
+            eachCaseInSquare[caseInSquare] = new Implies(numberSelected,new And(notTheSameNumberInBox));
+        }else{
+            eachCaseInSquare[caseInSquare] = new Implies(new Not(numberSelected),new Or(notTheSameNumberInBox));
+        }
+
     }
 
-    private static int incrementIfNotSameProp(PropositionalVariable numberSelected, Not[] notTheSameNumberInBox, PropositionalVariable toKeep, int increment) {
-        if( toKeep != numberSelected){
-            notTheSameNumberInBox[increment] =  new Not(toKeep);
+    private static int incrementIfNotSameProp(BooleanFormula numberSelected, BooleanFormula[] notTheSameNumberInBox, BooleanFormula toKeep, int increment,String type) {
+        if(numberSelected != toKeep){
+            if(type.equals("notAtRight")){
+                notTheSameNumberInBox[increment] =  new Not(toKeep);
+            }else{
+                notTheSameNumberInBox[increment] =  toKeep;
+            }
             increment++;
         }
         return increment;
@@ -262,5 +280,7 @@ public class ModelisationBoolean {
         }
         return new And(tabAndImplic);
     }
+
+
 
 }
