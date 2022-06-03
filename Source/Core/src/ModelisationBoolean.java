@@ -38,7 +38,7 @@ public class ModelisationBoolean {
 //        System.out.println("Proposition 1 : Chaque case ne peut contenir qu’un seul chiffre \n" + prop1);
 
         And prop2 = getProp("prop2",allNumbersSort);
-       System.out.println("\nProposition 2 : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2);
+//       System.out.println("\nProposition 2 : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2);
 
         And prop3 = getProp("prop3",allNumbersSort);
 //        System.out.println("\nProposition 3 : Chaque chiffre doit apparaître exactement une fois dans chaque colonne de la grille \n" + prop3);
