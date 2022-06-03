@@ -1,5 +1,7 @@
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
+import org.sat4j.reader.DimacsReader;
+import org.sat4j.reader.Reader;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
@@ -22,7 +24,7 @@ public class Sudoku {
         char[][] sudoku = getSudokuByArgs(args[0]);
 
         BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean(sudoku); ////
-        System.out.println(cnf);
+        //System.out.println(cnf);
 
         int[][] clauses = cnf.getClauses();
 
@@ -31,21 +33,22 @@ public class Sudoku {
 //        System.out.println(Arrays.deepToString(sudoku));
    //     System.out.println(Arrays.deepToString(clauses));
 
-        boolean res = solveProblem(clauses);
-        WriteSudoku(sudoku);
+      //  boolean res = solveProblem(clauses);
+        //WriteSudoku(sudoku);
 
     }
 
 
 
     public static boolean solveProblem(int[][] clauses) throws ContradictionException, TimeoutException {
-        final int MAXVAR = 729;
+        final int MAXVAR = 10000000;
         final int NBCLAUSES = clauses.length;
 
         ISolver solver= SolverFactory.newDefault();
 
         solver.newVar(MAXVAR);
         solver.setExpectedNumberOfClauses(NBCLAUSES);
+
 
         for (int[] clause : clauses) {
 
@@ -54,8 +57,10 @@ public class Sudoku {
 
         IProblem problem = solver;
 
+
         if (problem.isSatisfiable()){
             System.out.println("Solution");
+            System.out.println(Arrays.toString(solver.modelWithInternalVariables()));
             return true;
         }else{
             System.out.println("Pas de de solution");

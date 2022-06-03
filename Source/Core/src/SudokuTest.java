@@ -147,6 +147,44 @@ System.out.println(propTest);
 
         Assert.assertFalse(Sudoku.solveProblem(clauses));
     }
+
+    @Test
+    public void testProb2AvoidVide() throws ContradictionException, TimeoutException {
+        sudoku = Sudoku.getSudokuByArgs("#26493815315728946489651237852147693673985124941362758194836572567214389238579461");
+
+
+        List<PropositionalVariable> res = new ArrayList<>();
+
+        for (int i = 0; i < sudoku.length; i++) {
+            for (int j = 0; j < sudoku[0].length; j++) {
+                if (sudoku[i][j] != ' ') {
+                    res.add(new PropositionalVariable("n" + (i+1) + (j+1) + sudoku[i][j]));
+                }
+            }
+        }
+        //res.add(new PropositionalVariable("!n117"));
+
+        //Transform list into array
+        PropositionalVariable[] propositionInArray = new PropositionalVariable[res.size()];
+        res.toArray(propositionInArray);
+
+
+        PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
+        And propNumberTrue = new And(propositionInArray);
+
+        And propTest = new And(ModelisationBoolean.getPropAvoidVoid("prop2",allNumbersSort));
+        System.out.println("propr"+propNumberTrue);
+        System.out.println(propTest+"\n");
+
+        And propTotal = new And(propTest,propNumberTrue);
+        BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+
+        int[][] clauses = cnf.getClauses();
+
+        System.out.println(Arrays.deepToString(clauses));
+
+        Assert.assertFalse(Sudoku.solveProblem(clauses));
+    }
     @Test
     public void testProb3_Exception() throws ContradictionException, TimeoutException {
         sudoku = Sudoku.getSudokuByArgs("#2########2########1#############################################################");
