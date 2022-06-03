@@ -1,17 +1,10 @@
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
-import org.sat4j.reader.DimacsReader;
-import org.sat4j.reader.Reader;
-import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
-import org.sat4j.specs.TimeoutException;
 import stev.booleans.*;
 
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project: stev-booleans
@@ -19,36 +12,42 @@ import java.util.List;
  */
 public class Sudoku {
 
-    public static void main(String[] args) throws ContradictionException, TimeoutException {
+    public static void main(String[] args) throws Exception {
 
         char[][] sudoku = getSudokuByArgs(args[0]);
 
         BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean(sudoku); ////
         //System.out.println(cnf);
+        BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean(sudoku);
+        Map<Integer, String> inverteGrille = getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-//        System.out.println(Arrays.deepToString(sudoku));
-        //System.out.println(Arrays.deepToString(clauses));
-//        System.out.println(Arrays.deepToString(sudoku));
-   //     System.out.println(Arrays.deepToString(clauses));
-
-      //  boolean res = solveProblem(clauses);
-        //WriteSudoku(sudoku);
+        List<String> res = solveProblem(clauses,inverteGrille);
+        System.out.println(res);
 
     }
 
+    public static Map<Integer, String> getInverteGrille(BooleanFormula cnf) {
+        Map<String, Integer> grilleIndiceProp = cnf.getVariablesMap();
+
+        Map<Integer, String> inverteGrille= new HashMap<>();
+
+        for (Map.Entry<String, Integer> entry : grilleIndiceProp.entrySet()){
+            inverteGrille.put(entry.getValue(), entry.getKey());
+        }
+        return inverteGrille;
+    }
 
 
-    public static boolean solveProblem(int[][] clauses) throws ContradictionException, TimeoutException {
-        final int MAXVAR = 10000000;
+    public static List<String> solveProblem(int[][] clauses, Map<Integer, String> invertGrille) throws Exception {
+        final int MAXVAR = 729;
         final int NBCLAUSES = clauses.length;
 
         ISolver solver= SolverFactory.newDefault();
 
         solver.newVar(MAXVAR);
         solver.setExpectedNumberOfClauses(NBCLAUSES);
-
 
         for (int[] clause : clauses) {
 
@@ -57,14 +56,20 @@ public class Sudoku {
 
         IProblem problem = solver;
 
-
         if (problem.isSatisfiable()){
             System.out.println("Solution");
-            System.out.println(Arrays.toString(solver.modelWithInternalVariables()));
-            return true;
+            int[] model = problem.model();
+
+            int[] justPostive = Arrays.stream(model).filter(n -> n >=0).toArray();
+
+            List<String> numberSearch = new ArrayList<>() ;
+            for (int i :
+                    justPostive) {
+                numberSearch.add(invertGrille.get(i));
+            }
+            return numberSearch;
         }else{
-            System.out.println("Pas de de solution");
-            return false;
+            throw new Exception("Pas de solution");
         }
     }
 

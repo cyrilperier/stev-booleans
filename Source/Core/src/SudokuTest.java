@@ -11,6 +11,7 @@ import stev.booleans.PropositionalVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -29,8 +30,8 @@ public class SudokuTest {
     public void tearDown() throws Exception {
     }
 
-    @Test
-    public void testProb1() throws ContradictionException, TimeoutException {
+    @Test(expected = Exception.class)
+    public void testProb1() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("122##############################################################################");
 
             List<PropositionalVariable> res = new ArrayList<>();
@@ -53,20 +54,20 @@ public class SudokuTest {
         And propNumberTrue = new And(propositionInArray);
 
         And propTest = new And(ModelisationBoolean.getProp1(allNumbersSort));
-System.out.println(propTest);
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
 
 
-        Assert.assertFalse(Sudoku.solveProblem(clauses));
+        Sudoku.solveProblem(clauses,inverteGrille);
     }
 
-    @Test
-    public void solveProblemTestOnSquarreNumberOnePresentMultipleTime() throws ContradictionException, TimeoutException {
+    @Test(expected = Exception.class)
+    public void solveProblemTestOnSquarreNumberOnePresentMultipleTime() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("#11######111######111############################################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
@@ -78,16 +79,16 @@ System.out.println(propTest);
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-        System.out.println(Arrays.deepToString(clauses));
 
-        Assert.assertFalse(Sudoku.solveProblem(clauses));
+        Sudoku.solveProblem(clauses,inverteGrille);
     }
 
     @Test
-    public void solveProblemTestOnSquarreNumberOneNotExisting() throws ContradictionException, TimeoutException {
+    public void solveProblemTestOnSquarreNumberOneNotExisting() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("1################################################################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
@@ -99,16 +100,16 @@ System.out.println(propTest);
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-        System.out.println(Arrays.deepToString(clauses));
 
-        Assert.assertTrue(Sudoku.solveProblem(clauses));
+        Sudoku.solveProblem(clauses,inverteGrille);
     }
 
-    @Test
-    public void solveProblemTestOnSquarreWithMultipleNumber() throws ContradictionException, TimeoutException {
+    @Test(expected = Exception.class)
+    public void solveProblemTestOnSquarreWithMultipleNumber() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("211######112######111############################################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
@@ -120,15 +121,16 @@ System.out.println(propTest);
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-        System.out.println(Arrays.deepToString(clauses));
 
-        Assert.assertFalse(Sudoku.solveProblem(clauses));
+       Sudoku.solveProblem(clauses,inverteGrille);
     }
-    @Test
-    public void testProb2() throws ContradictionException, TimeoutException {
+
+    @Test(expected = Exception.class)
+    public void testProb2() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("122##############################################################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
@@ -140,11 +142,12 @@ System.out.println(propTest);
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-        System.out.println(Arrays.deepToString(clauses));
 
+        Sudoku.solveProblem(clauses,inverteGrille);
         Assert.assertFalse(Sudoku.solveProblem(clauses));
     }
 
@@ -185,8 +188,8 @@ System.out.println(propTest);
 
         Assert.assertFalse(Sudoku.solveProblem(clauses));
     }
-    @Test
-    public void testProb3_Exception() throws ContradictionException, TimeoutException {
+    @Test(expected = Exception.class)
+    public void testProb3_Exception() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("#2########2########1#############################################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
@@ -198,17 +201,17 @@ System.out.println(propTest);
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-        System.out.println(Arrays.deepToString(clauses));
 
-        Assert.assertFalse(Sudoku.solveProblem(clauses));
+        Sudoku.solveProblem(clauses,inverteGrille);
     }
 
 
     @Test
-    public void solveProblemTestOnSquarreMultipleNumber() throws ContradictionException, TimeoutException {
+    public void solveProblemTestOnSquarreMultipleNumber() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("2########1##########8############################################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
@@ -219,16 +222,16 @@ System.out.println(propTest);
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-        System.out.println(Arrays.deepToString(clauses));
 
-        Assert.assertTrue(Sudoku.solveProblem(clauses));
+        Sudoku.solveProblem(clauses,inverteGrille);
     }
 
     @Test
-    public void solveProblemTestOnThreeSquarres() throws ContradictionException, TimeoutException {
+    public void solveProblemTestOnThreeSquarres() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("1########2########3#########1#######2############################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
@@ -239,16 +242,16 @@ System.out.println(propTest);
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-        System.out.println(Arrays.deepToString(clauses));
 
-        Assert.assertTrue(Sudoku.solveProblem(clauses));
+       Sudoku.solveProblem(clauses,inverteGrille);
     }
 
-    @Test
-    public void solveProblemTestOnThreeSquarres_ExcptionBecauseTwo1() throws ContradictionException, TimeoutException {
+    @Test(expected = Exception.class)
+    public void solveProblemTestOnThreeSquarres_ExcptionBecauseTwo1() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("1########2########3#########1#######1############################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
@@ -259,17 +262,17 @@ System.out.println(propTest);
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-        System.out.println(Arrays.deepToString(clauses));
 
-        Assert.assertFalse(Sudoku.solveProblem(clauses));
+        Sudoku.solveProblem(clauses,inverteGrille);
     }
 
 
-    @Test
-    public void solveProblemTestOnAllSudoku_Two9InOneSquarre() throws ContradictionException, TimeoutException {
+    @Test(expected = Exception.class)
+    public void solveProblemTestOnAllSudoku_Two9InOneSquarre() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("1###5####2########3#########4##9####1###9########################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
@@ -280,16 +283,16 @@ System.out.println(propTest);
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-        System.out.println(Arrays.deepToString(clauses));
 
-        Assert.assertFalse(Sudoku.solveProblem(clauses));
+        Sudoku.solveProblem(clauses,inverteGrille);
     }
 
     @Test
-    public void solveProblemTestOnAllSudokuGood() throws ContradictionException, TimeoutException {
+    public void solveProblemTestOnAllSudokuGood() throws Exception {
         sudoku = Sudoku.getSudokuByArgs("1###5####2########3#########4##2####1###9########################################");
 
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
@@ -300,12 +303,12 @@ System.out.println(propTest);
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-        System.out.println(Arrays.deepToString(clauses));
 
-        Assert.assertTrue(Sudoku.solveProblem(clauses));
+        Sudoku.solveProblem(clauses,inverteGrille);
     }
 
 }
