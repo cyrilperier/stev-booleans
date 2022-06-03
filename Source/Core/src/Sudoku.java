@@ -66,6 +66,7 @@ public class Sudoku {
                     justPostive) {
                 numberSearch.add(invertGrille.get(i));
             }
+            System.out.println(numberSearch);
             return numberSearch;
         }else{
             throw new Exception("Pas de solution");

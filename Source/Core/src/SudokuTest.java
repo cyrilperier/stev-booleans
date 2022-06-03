@@ -8,6 +8,7 @@ import stev.booleans.And;
 import stev.booleans.BooleanFormula;
 import stev.booleans.PropositionalVariable;
 
+import javax.management.ValueExp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -151,9 +152,9 @@ public class SudokuTest {
 
     }
 
-    @Test
-    public void testProb2AvoidVide() throws ContradictionException, TimeoutException {
-        sudoku = Sudoku.getSudokuByArgs("#26493815315728946489651237852147693673985124941362758194836572567214389238579461");
+    @Test()
+    public void testProb2AvoidVide() throws Exception {
+    sudoku = Sudoku.getSudokuByArgs("#26493815315728946489651237852147693673985124941362758194836572567214389238579461");
 
 
         List<PropositionalVariable> res = new ArrayList<>();
@@ -175,17 +176,18 @@ public class SudokuTest {
         PropositionalVariable[][][] allNumbersSort = ModelisationBoolean.createAllProp();
         And propNumberTrue = new And(propositionInArray);
 
-        And propTest = new And(ModelisationBoolean.getPropAvoidVoid("prop2",allNumbersSort));
-        System.out.println("propr"+propNumberTrue);
-        System.out.println(propTest+"\n");
+        And propTest = new And(ModelisationBoolean.getPropAvoidVoid("prop2",allNumbersSort),ModelisationBoolean.getProp1(allNumbersSort));
+
 
         And propTotal = new And(propTest,propNumberTrue);
         BooleanFormula cnf = BooleanFormula.toCnf(propTotal);
+        Map<Integer, String> inverteGrille = Sudoku.getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
-        System.out.println(Arrays.deepToString(clauses));
 
+        List<String> value=Sudoku.solveProblem(clauses,inverteGrille);
+        Assert.assertTrue("n117",value.contains("n117"));
 
     }
     @Test(expected = Exception.class)
@@ -207,6 +209,7 @@ public class SudokuTest {
 
 
         Sudoku.solveProblem(clauses,inverteGrille);
+
     }
 
 
