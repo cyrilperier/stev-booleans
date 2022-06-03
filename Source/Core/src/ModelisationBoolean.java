@@ -39,10 +39,14 @@ public class ModelisationBoolean {
 //        System.out.println("Proposition 1 : Chaque case ne peut contenir qu’un seul chiffre \n" + prop1);
 
         And prop2 = getProp("prop2",allNumbersSort);
-//       System.out.println("\nProposition 2 : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2);
+       //System.out.println("\nProposition 2 pour éviter d'avoir deux fois le même nombre dans une ligne: Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2);
+        And prop2AvoidVoid = getPropAvoidVoid("prop2",allNumbersSort);
+        System.out.println("\nProposition 2 pour avoir au moins une fois un nombre dans une ligne : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2AvoidVoid);
 
         And prop3 = getProp("prop3",allNumbersSort);
-//        System.out.println("\nProposition 3 : Chaque chiffre doit apparaître exactement une fois dans chaque colonne de la grille \n" + prop3);
+//        System.out.println("\nProposition 3  pour éviter d'avoir deux fois le même nombre dans une colonne: Chaque chiffre doit apparaître exactement une fois dans chaque colonne de la grille \n" + prop3);
+        And prop3AvoidVoid = getPropAvoidVoid("prop3",allNumbersSort);
+        System.out.println("\nProposition 3 pour avoir au moins une fois un nombre dans une colonne : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop3AvoidVoid);
 
         And prop4 = getProp4(allNumbersSort);
 //        System.out.println("\nProposition 4 : Chaque chiffre doit apparaître exactement une fois dans chacune des neuf sous-grilles de taille 3×3 \n" + prop4);
@@ -248,6 +252,42 @@ public class ModelisationBoolean {
         return new And(tabAndTotal);
     }
 
+    public static And getPropAvoidVoid(String prop,PropositionalVariable[][][] allNumbersSort){
+        And[] tabOrImplic  = new And[9];
+        Implies[] tabImplic = new Implies[9];
+        PropositionalVariable[] allColumnFirstLine = new PropositionalVariable[8];
+        And[]tabAndTotal = new And[9];
+        int increment = 0;
+        for(int m = 0;m<9;m++) {
+            for (int l = 0; l < 9; l++) {
+                for (int n = 0; n < 9; n++) {
+                    for (int c = 0; c < 9; c++) {
+                        if (allNumbersSort[l][m][n] != allNumbersSort[l][c][n]) {
+
+
+                            if (prop.equals("prop2")) {
+                                allColumnFirstLine[increment] = allNumbersSort[l][c][n];
+                                increment++;
+                            } else if (prop.equals("prop3")) {
+                                allColumnFirstLine[increment] = allNumbersSort[c][l][n];
+                                increment++;
+
+                            }
+                        }
+                    }
+                    increment = 0;
+                    if (prop.equals("prop2")) {
+                        tabImplic[n] = new Implies(new Not(allNumbersSort[l][m][n]), new Or(allColumnFirstLine));
+                    } else if (prop.equals("prop3")) {
+                        tabImplic[n] = new Implies(new Not(allNumbersSort[m][l][n]), new Or(allColumnFirstLine));
+                    }
+                }
+                tabOrImplic[l] = new And(tabImplic);
+            }
+            tabAndTotal[m]= new And(tabOrImplic);
+        }
+        return new And(tabAndTotal);
+    }
 
 
 

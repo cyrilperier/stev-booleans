@@ -20,7 +20,8 @@ public class Sudoku {
 
         char[][] sudoku = getSudokuByArgs(args[0]);
 
-        BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean(sudoku);
+        BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean(sudoku); ////
+        System.out.println(cnf);
         Map<Integer, String> inverteGrille = getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
