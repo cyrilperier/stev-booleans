@@ -15,19 +15,27 @@ import java.util.*;
  * Package: PACKAGE_NAME
  */
 public class Sudoku {
-
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_RESET = "\u001B[0m";
     public static void main(String[] args) throws Exception {
 
         char[][] sudoku = getSudokuByArgs(args[0]);
 
         BooleanFormula cnf = ModelisationBoolean.modelisationStevBoolean(sudoku); ////
-        System.out.println(cnf);
+
         Map<Integer, String> inverteGrille = getInverteGrille(cnf);
 
         int[][] clauses = cnf.getClauses();
 
         List<String> res = solveProblem(clauses,inverteGrille);
-        System.out.println(res);
+        if(res.size()>0){
+            getSolutionOfSudoku(res);
+            char[][] solution = getSudokuByArgs(getSolutionOfSudoku(res));
+            writeSudoku(sudoku,solution);
+        }
+
+
+
 
     }
 
@@ -60,7 +68,7 @@ public class Sudoku {
         IProblem problem = solver;
 
         if (problem.isSatisfiable()){
-            System.out.println("Solution");
+            System.out.println("Il existe une ou plusieur solution. \nVoici l'une d'entre elle :\n");
             int[] model = problem.model();
 
             int[] justPostive = Arrays.stream(model).filter(n -> n >=0).toArray();
@@ -70,11 +78,11 @@ public class Sudoku {
                     justPostive) {
                 numberSearch.add(invertGrille.get(i));
             }
-            System.out.println(numberSearch.size());
-            System.out.println(numberSearch);
+
+
             return numberSearch;
         }else{
-            throw new Exception("Pas de solution");
+            throw new Exception("Il n'y a pas de solution possible");
         }
     }
 
@@ -95,15 +103,16 @@ public class Sudoku {
         return gameTable;
     }
 
-    private static void WriteSudoku(char[][] sudoku) {
+    private static void writeSudoku(char[][] sudoku,char[][] solution) {
+
         for(int j=0;j<9;j++) {
             for (int i = 0; i < 9; i++) {
                 if (i == 3 || i==6) {
                     System.out.print("|");
                     System.out.print(" ");
                 }
-                if (sudoku[j][i] == ' ') {
-                    System.out.print("-");
+                if (sudoku[j][i] != solution[j][i]) {
+                System.out.print(ANSI_GREEN+solution[j][i]+ANSI_RESET);
                     System.out.print(" ");
                 } else {
                     System.out.print(sudoku[j][i]);
@@ -116,6 +125,18 @@ public class Sudoku {
             if(j==2 || j==5){
                 System.out.println("======|=======|======");}
         }
+    }
+
+
+    public static String getSolutionOfSudoku(List<String> solution) {
+
+      Collections.sort(solution);
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < solution.size(); i++) {
+            char[] charArr = solution.get(i).toCharArray();
+            str.append(charArr[3]);
+                }
+        return str.toString();
     }
 
 

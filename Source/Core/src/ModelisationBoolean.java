@@ -33,26 +33,25 @@ public class ModelisationBoolean {
         And propNumberTrue = new And(getPropositionOfSudoku(sudoku));
         PropositionalVariable[][][] allNumbersSort = createAllProp();
 
-//        System.out.println("Proposition existante :  \n" + propNumberTrue);
 
         And prop1=getProp1(allNumbersSort);
-//        System.out.println("Proposition 1 : Chaque case ne peut contenir qu’un seul chiffre \n" + prop1);
+//      System.out.println("Proposition 1 : Chaque case ne peut contenir qu’un seul chiffre \n" + prop1);
 
         And prop2 = getProp("prop2",allNumbersSort);
-       //System.out.println("\nProposition 2 pour éviter d'avoir deux fois le même nombre dans une ligne: Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2);
+//      System.out.println("\nProposition 2 pour éviter d'avoir deux fois le même nombre dans une ligne: Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille
         And prop2AvoidVoid = getPropAvoidVoid("prop2",allNumbersSort);
-        System.out.println("\nProposition 2 pour avoir au moins une fois un nombre dans une ligne : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop2AvoidVoid);
+//      Proposition 2 pour avoir au moins une fois un nombre dans une ligne : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille
 
         And prop3 = getProp("prop3",allNumbersSort);
-//        System.out.println("\nProposition 3  pour éviter d'avoir deux fois le même nombre dans une colonne: Chaque chiffre doit apparaître exactement une fois dans chaque colonne de la grille \n" + prop3);
+//      Proposition 3  pour éviter d'avoir deux fois le même nombre dans une colonne: Chaque chiffre doit apparaître exactement une fois dans chaque colonne de la grille
         And prop3AvoidVoid = getPropAvoidVoid("prop3",allNumbersSort);
-        System.out.println("\nProposition 3 pour avoir au moins une fois un nombre dans une colonne : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille \n" + prop3AvoidVoid);
+//      Proposition 3 pour avoir au moins une fois un nombre dans une colonne : Chaque chiffre doit apparaître exactement une fois dans chaque ligne de la grille
 
         And prop4 = getProp4(allNumbersSort);
-//        System.out.println("\nProposition 4 : Chaque chiffre doit apparaître exactement une fois dans chacune des neuf sous-grilles de taille 3×3 \n" + prop4);
+//      Proposition 4 : Chaque chiffre doit apparaître exactement une fois dans chacune des neuf sous-grilles de taille 3×3
 
-//        System.out.println(propNumberTrue +" \n" + prop1);
-        And propTotal = new And(prop1,prop2,prop3,prop4, propNumberTrue);
+
+        And propTotal = new And(prop1,prop2,prop3,prop4,prop2AvoidVoid,prop3AvoidVoid, propNumberTrue);
 
 
 
